@@ -548,9 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd4bec64991859439772569516c5d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resourceSpawners:
-  - {fileID: 805669565}
-  - {fileID: 519785886}
+  _resourceTag: Resource
 --- !u!4 &614760508
 Transform:
   m_ObjectHideFlags: 0
@@ -600,7 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4935b7c0ab5be148b610ce231769995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dropPoint: {fileID: 1888099200}
+  _dropPoint: {fileID: 1888099201}
   _storageParent: {fileID: 785749047}
   _listResources: {fileID: 614760507}
   bots:
@@ -857,7 +855,7 @@ MonoBehaviour:
   Prefab: {fileID: 1179927663971752523, guid: 222ecd88514d1f34e80c4132c06ced40, type: 3}
   PoolSize: 10
   _arenaCollider: {fileID: 805669566}
-  _spawnIntervalSeconds: 1
+  _spawnIntervalSeconds: 1.2
 --- !u!65 &805669566
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1281,7 +1279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e854c197b7ec98749853373c03feb35a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _base: {fileID: 673616466}
+  _dropPoint: {fileID: 1888099201}
   _textHeader: {fileID: 35636169}
   _textCount: {fileID: 52360377}
 --- !u!114 &1469717641
@@ -1471,6 +1469,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1888099200}
+  - component: {fileID: 1888099201}
   m_Layer: 0
   m_Name: DropPoint
   m_TagString: Untagged
@@ -1493,6 +1492,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 673616470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1888099201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888099199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb30bf27944d0d54086ee92c10b92163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4279189313922320935
 PrefabInstance:
   m_ObjectHideFlags: 0

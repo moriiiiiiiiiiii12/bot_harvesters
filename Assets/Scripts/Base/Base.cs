@@ -1,26 +1,22 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Base : MonoBehaviour
 {
-    [SerializeField] private Transform _dropPoint;
+    [SerializeField] private DropPoint _dropPoint;
     [SerializeField] private Transform _storageParent;
-    [SerializeField] private ListResources _listResources;
+    [SerializeField] private ScannerResources _scannerResources;
     [SerializeField] private List<Bot> bots;
     [SerializeField] private float _assignInterval = 0.1f;
 
     private Coroutine _assignRoutine;
 
-    public Transform DropPoint => _dropPoint;
-    public Action ResourceReceived;
-
     private void Start()
     {
         foreach(Bot bot in bots)
         {
-            bot.SetBase(this);
+            bot.SetDropPoint(_dropPoint);
         }
     }
 
@@ -59,21 +55,14 @@ public class Base : MonoBehaviour
             if (bot == null || bot.Busy)
                 continue;
 
-            if (_listResources.TryGetResource(out Resource resource))
+            if (_scannerResources.TryGetResource(out Resource resource))
             {
-                bot.SetTarget(resource.transform, resource.UUID);
+                bot.SetTarget(resource.transform, resource.Id);
             }
             else
             {
                 break;
             }
         }
-    }
-
-    public void Receive(Resource resource)
-    {
-        resource.Reset();
-
-        ResourceReceived?.Invoke();
     }
 }

@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class ResourceSpawner : Spawner<Resource>
 {
     [SerializeField] private Collider _arenaCollider;
     [SerializeField] private float _spawnIntervalSeconds = 3.0f;
 
-    public Action<Resource> SpawnResource;
+    public event Action<Resource> SpawnResource;
 
     private Coroutine _spawnCoroutine;
 
@@ -62,7 +62,7 @@ public class ResourceSpawner : Spawner<Resource>
             return;
 
         if (ActiveObjects.Contains(resource) == false)
-            return; 
+            return;
 
         resource.ReleaseRequested -= ReturnObject;
         Pool.Release(resource);

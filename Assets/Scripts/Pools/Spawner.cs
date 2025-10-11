@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
+
 public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
     [Header("Необходимые компоненты: ")]
@@ -29,7 +30,7 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
             actionOnGet: (prefab) =>
             {
                 CountActiveObjects++;
-                ActionOnGet(prefab); 
+                ActionOnGet(prefab);
 
                 ActiveObjects.Add(prefab);
             },

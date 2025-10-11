@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5830747360084176693}
   m_Layer: 0
   m_Name: Resource
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 162acab212e5fb644b66f8b52edee57c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 5830747360084176693}
 --- !u!54 &5830747360084176693
 Rigidbody:
   m_ObjectHideFlags: 0

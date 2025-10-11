@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+
 class Movement : MonoBehaviour
 {
     [SerializeField] private float _speed;
@@ -12,7 +13,7 @@ class Movement : MonoBehaviour
 
     private Coroutine _coroutine;
 
-    public Action ReachTarget;
+    public event Action ReachTarget;
 
     public void SetTarget(Transform target)
     {
@@ -25,15 +26,15 @@ class Movement : MonoBehaviour
 
     private IEnumerator ExecuteMove()
     {
-        while(enabled)
+        while (enabled)
         {
             MoveTowardsTarget();
 
-            if(Reached())
+            if (Reached())
             {
                 ReachTarget?.Invoke();
                 Reset();
-                
+
                 yield break;
             }
 
@@ -52,7 +53,7 @@ class Movement : MonoBehaviour
             transform.LookAt(_target);
         }
     }
-    
+
     private bool Reached()
     {
         return (_targetPosition - transform.position).sqrMagnitude <= _arriveDistance * _arriveDistance;

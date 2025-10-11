@@ -1,14 +1,14 @@
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class Bot : MonoBehaviour
 {
-    [SerializeField] private Movement _movement;           
+    [SerializeField] private Movement _movement;
     [SerializeField] private ResourceCapture _resourceCapture;
-    [SerializeField] private Base _base;
+    [SerializeField] private DropPoint _dropPoint;
 
     private Transform _targetTransform;
+    private Resource _tempResource;
 
     public bool Busy { get; private set; } = false;
 
@@ -22,43 +22,51 @@ public class Bot : MonoBehaviour
         _resourceCapture.TakeObject -= OnTookResource;
     }
 
-    public void SetTarget(Transform targetResources, string UUID)
+    public void SetDropPoint(DropPoint dropPoint)
+    {
+        _dropPoint = dropPoint;
+    }
+
+    public void SetTarget(Transform targetResources, int Id)
     {
         if (Busy)
             return;
 
         _targetTransform = targetResources;
-        _resourceCapture.SetResourceUUID(UUID);
+        _resourceCapture.SetResourceId(Id);
 
         Busy = true;
         _movement.SetTarget(_targetTransform);
     }
-    
-    public void SetBase(Base @base)
-    {
-        _base = @base;
-    }
 
     private void OnTookResource(Resource resource)
     {
-        _movement.SetTarget(_base.DropPoint);
-        _movement.ReachTarget = null;
-        _movement.ReachTarget += () => GiveAway(resource);
+        _tempResource = resource;
+
+        _movement.SetTarget(_dropPoint.transform);
+
+        _movement.ReachTarget += OnReachTarget;
+    }
+
+    private void OnReachTarget()
+    {
+        if (_tempResource == null) return; 
+            GiveAway(_tempResource);
     }
 
     private void GiveAway(Resource resource)
     {
         _resourceCapture.Release();
-        _base.Receive(resource);
+        _dropPoint.Receive(resource);
         Reset();
-
     }
 
     public void Reset()
     {
+        _tempResource = null;
         _targetTransform = null;
         Busy = false;
-        _movement.ReachTarget = null;
+        _movement.ReachTarget -= OnReachTarget;
         _movement.Reset();
     }
 }

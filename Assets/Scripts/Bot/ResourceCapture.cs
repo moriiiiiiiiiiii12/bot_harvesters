@@ -1,14 +1,14 @@
 using System;
 using UnityEngine;
 
+
 public class ResourceCapture : MonoBehaviour
 {
-    [SerializeField] private Transform _holdPoint; 
+    [SerializeField] private Transform _holdPoint;
 
     private Resource _resource;
-    private Rigidbody _resourceRigidbody;
 
-    private string _resourceUUID;
+    private int _resourceId;
 
     public event Action<Resource> TakeObject;
 
@@ -18,17 +18,17 @@ public class ResourceCapture : MonoBehaviour
             Take(resource);
     }
 
-    public void SetResourceUUID(string UUID)
+    public void SetResourceId(int Id)
     {
-        _resourceUUID = UUID;
+        _resourceId = Id;
     }
 
     private void Take(Resource resource)
     {
-        if (_resource != null) 
+        if (_resource != null)
             return;
 
-        if (_resourceUUID != resource.UUID)
+        if (_resourceId != resource.Id)
             return;
 
         _resource = resource;
@@ -36,13 +36,8 @@ public class ResourceCapture : MonoBehaviour
         Transform parent = _holdPoint != null ? _holdPoint : transform;
 
         _resource.transform.SetParent(parent);
-        _resource.transform.localPosition = Vector3.zero;
 
-        if (_resource.TryGetComponent(out Rigidbody rb))
-        {
-            _resourceRigidbody = rb;
-            _resourceRigidbody.isKinematic = true;
-        }
+        _resource.Take();
 
         TakeObject?.Invoke(_resource);
     }
@@ -52,12 +47,9 @@ public class ResourceCapture : MonoBehaviour
         if (_resource == null)
             return;
 
-        if (_resourceRigidbody != null)
-            _resourceRigidbody.isKinematic = false;
+        _resource.Release();
 
-        _resource.transform.SetParent(null);
-        _resourceRigidbody = null;
         _resource = null;
-        _resourceUUID = null;
+        _resourceId = default;
     }
 }

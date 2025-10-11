@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 class Counter : MonoBehaviour
 {
-    [SerializeField] private Base _base;
+    [SerializeField] private DropPoint _dropPoint;
     [SerializeField] private Text _textHeader;
     [SerializeField] private Text _textCount;
 
@@ -12,12 +12,12 @@ class Counter : MonoBehaviour
 
     private void OnEnable()
     {
-        _base.ResourceReceived += Increase;
+        _dropPoint.ResourceReceived += Increase;
     }
 
     private void OnDisable()
     {
-        _base.ResourceReceived -= Increase;
+        _dropPoint.ResourceReceived -= Increase;
     }
 
     private void Start()
@@ -29,7 +29,7 @@ class Counter : MonoBehaviour
     {
         _textCount.text = _count.ToString();
     }
-    
+
     private void Increase()
     {
         _count++;
