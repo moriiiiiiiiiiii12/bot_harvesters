@@ -1,0 +1,70 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ResourceSpawner : Spawner<Resource>
+{
+    [SerializeField] private Collider _arenaCollider;
+    [SerializeField] private float _spawnIntervalSeconds = 3.0f;
+
+    public Action<Resource> SpawnResource;
+
+    private Coroutine _spawnCoroutine;
+
+    private void OnEnable()
+    {
+        _spawnCoroutine = StartCoroutine(SpawnLoopCoroutine());
+    }
+
+    private void OnDisable()
+    {
+        if (_spawnCoroutine != null)
+        {
+            StopCoroutine(_spawnCoroutine);
+            _spawnCoroutine = null;
+        }
+    }
+
+    private IEnumerator SpawnLoopCoroutine()
+    {
+        while (enabled == true)
+        {
+            TrySpawnOne();
+            yield return new WaitForSeconds(_spawnIntervalSeconds);
+        }
+    }
+
+    private void TrySpawnOne()
+    {
+        if (CountActiveObjects >= PoolSize)
+        {
+            return;
+        }
+
+        Resource resource = Pool.Get();
+
+        Bounds bounds = _arenaCollider.bounds;
+
+        float x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
+        float y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);
+        float z = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
+
+        resource.transform.position = new Vector3(x, y, z);
+
+        resource.ReleaseRequested += ReturnObject;
+        SpawnResource?.Invoke(resource);
+    }
+
+    protected void ReturnObject(Resource resource)
+    {
+        if (resource == null)
+            return;
+
+        if (ActiveObjects.Contains(resource) == false)
+            return; 
+
+        resource.ReleaseRequested -= ReturnObject;
+        Pool.Release(resource);
+    }
+}
