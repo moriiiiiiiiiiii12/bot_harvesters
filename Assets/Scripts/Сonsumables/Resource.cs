@@ -5,8 +5,6 @@ using UnityEngine;
 public class Resource : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rigidbody;
-
-    public bool Reserved { get; private set; } = false;
     public int Id { get; private set; }
     public event Action<Resource> ReleaseRequested;
 
@@ -23,11 +21,6 @@ public class Resource : MonoBehaviour
         }
     }
 
-    public void Reserve()
-    {
-        Reserved = true;
-    }
-
     public void Take()
     {
         if (_rigidbody != null)
@@ -42,7 +35,5 @@ public class Resource : MonoBehaviour
             _rigidbody.isKinematic = false;
 
         gameObject.transform.SetParent(null);
-
-        Reserved = false;
     }
 }

@@ -10,7 +10,7 @@ public class Bot : MonoBehaviour
     private Transform _targetTransform;
     private Resource _tempResource;
 
-    public bool Busy { get; private set; } = false;
+    public bool IsBusy { get; private set; } = false;
 
     private void OnEnable()
     {
@@ -29,13 +29,13 @@ public class Bot : MonoBehaviour
 
     public void SetTarget(Transform targetResources, int Id)
     {
-        if (Busy)
+        if (IsBusy)
             return;
 
         _targetTransform = targetResources;
         _resourceCapture.SetResourceId(Id);
 
-        Busy = true;
+        IsBusy = true;
         _movement.SetTarget(_targetTransform);
     }
 
@@ -65,7 +65,7 @@ public class Bot : MonoBehaviour
     {
         _tempResource = null;
         _targetTransform = null;
-        Busy = false;
+        IsBusy = false;
         _movement.ReachTarget -= OnReachTarget;
         _movement.Reset();
     }

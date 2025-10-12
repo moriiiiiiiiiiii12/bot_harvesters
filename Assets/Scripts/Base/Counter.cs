@@ -21,7 +21,7 @@ class Counter : MonoBehaviour
     }
 
     private void Start()
-    {
+    { 
         _textHeader.text = "Ресурсов: ";
     }
 

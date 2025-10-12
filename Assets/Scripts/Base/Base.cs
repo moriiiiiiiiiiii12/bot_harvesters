@@ -52,7 +52,7 @@ public class Base : MonoBehaviour
         {
             Bot bot = bots[i];
 
-            if (bot == null || bot.Busy)
+            if (bot == null || bot.IsBusy)
                 continue;
 
             if (_scannerResources.TryGetResource(out Resource resource))

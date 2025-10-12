@@ -549,6 +549,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceTag: Resource
+  _scanRadius: 30
+  _scanInterval: 1
+  _resourceLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!4 &614760508
 Transform:
   m_ObjectHideFlags: 0
@@ -557,14 +562,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614760506}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.810149, y: -3.5697718, z: 8.763027}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.26397243, y: 0.73959583, z: 0.22258484}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 805669569}
   - {fileID: 519785890}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 673616470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &673616465
 GameObject:
@@ -600,7 +605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dropPoint: {fileID: 1888099201}
   _storageParent: {fileID: 785749047}
-  _listResources: {fileID: 614760507}
+  _scannerResources: {fileID: 614760507}
   bots:
   - {fileID: 1099477007}
   - {fileID: 298388569}
@@ -693,6 +698,7 @@ Transform:
   - {fileID: 1888099200}
   - {fileID: 785749047}
   - {fileID: 1469717639}
+  - {fileID: 614760508}
   m_Father: {fileID: 1086536399}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
@@ -855,7 +861,7 @@ MonoBehaviour:
   Prefab: {fileID: 1179927663971752523, guid: 222ecd88514d1f34e80c4132c06ced40, type: 3}
   PoolSize: 10
   _arenaCollider: {fileID: 805669566}
-  _spawnIntervalSeconds: 1.2
+  _spawnIntervalSeconds: 1
 --- !u!65 &805669566
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -936,8 +942,8 @@ Transform:
   m_GameObject: {fileID: 805669564}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.16015, y: 5.789772, z: 7.41}
-  m_LocalScale: {x: 45.481644, y: 2.6175, z: 16.54377}
+  m_LocalPosition: {x: 8.16015, y: 3.65, z: 12.92}
+  m_LocalScale: {x: 30.529097, y: 2.6175, z: 16.54377}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 614760508}
@@ -1258,8 +1264,8 @@ RectTransform:
   m_LocalScale: {x: 0.04, y: 0.1723499, z: 0.028268876}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 52360376}
   - {fileID: 35636168}
+  - {fileID: 52360376}
   m_Father: {fileID: 673616470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1569,7 +1575,6 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 129171188}
   - {fileID: 1086536399}
-  - {fileID: 614760508}
   - {fileID: 4279189313922320935}
   - {fileID: 1785739765}
   - {fileID: 1259517196}

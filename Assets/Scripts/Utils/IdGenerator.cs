@@ -1,12 +1,11 @@
-using System;
-
+using System.Threading;
 
 public static class IdGenerator
 {
-    private static readonly Random _random = new Random();
-        
+    private static int _nextId = 0;
+
     public static int GenerateId()
     {
-        return _random.Next();
+        return Interlocked.Increment(ref _nextId);
     }
 }
