@@ -37,7 +37,7 @@ public class ResourceCapture : MonoBehaviour
 
         _resource.transform.SetParent(parent);
 
-        _resource.Take();
+        _resource.PickUp();
 
         TakeObject?.Invoke(_resource);
     }
@@ -45,7 +45,10 @@ public class ResourceCapture : MonoBehaviour
     public void Release()
     {
         if (_resource == null)
+        {
+            Debug.Log("что");
             return;
+        }
 
         _resource.Release();
 

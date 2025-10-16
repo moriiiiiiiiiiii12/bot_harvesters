@@ -241,7 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movement: {fileID: 8609933442294181195}
   _resourceCapture: {fileID: 257712645182966627}
-  _base: {fileID: 0}
+  _dropPoint: {fileID: 0}
 --- !u!114 &8609933442294181195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,5 +254,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9480905d08fba44b832cd1cc628e6f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 10
+  _speed: 7
   _arriveDistance: 0.1

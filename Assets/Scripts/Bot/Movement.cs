@@ -6,7 +6,7 @@ using UnityEngine;
 class Movement : MonoBehaviour
 {
     [SerializeField] private float _speed;
-    [SerializeField] private float _arriveDistance = 0.1f;
+    [SerializeField] private float _arriveDistance = 0.3f;
 
     private Transform _target;
     private Vector3 _targetPosition => _target.position;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ResourceSpawner : Spawner<Resource>
 {
-    [SerializeField] private Collider _arenaCollider;
+    [SerializeField] private Renderer _arenaRenderer;
     [SerializeField] private float _spawnIntervalSeconds = 3.0f;
 
     public event Action<Resource> SpawnResource;
@@ -31,6 +31,7 @@ public class ResourceSpawner : Spawner<Resource>
         while (enabled == true)
         {
             TrySpawnOne();
+            
             yield return new WaitForSeconds(_spawnIntervalSeconds);
         }
     }
@@ -44,7 +45,7 @@ public class ResourceSpawner : Spawner<Resource>
 
         Resource resource = Pool.Get();
 
-        Bounds bounds = _arenaCollider.bounds;
+        Bounds bounds = _arenaRenderer.bounds;
 
         float x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
         float y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);

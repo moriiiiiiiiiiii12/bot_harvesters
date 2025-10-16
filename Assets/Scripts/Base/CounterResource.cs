@@ -1,14 +1,23 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-class Counter : MonoBehaviour
+class CounterResource : MonoBehaviour
 {
     [SerializeField] private DropPoint _dropPoint;
     [SerializeField] private Text _textHeader;
     [SerializeField] private Text _textCount;
 
     private int _count;
+    public int Count => _count;
+
+    public event Action CountChanged;
+
+    private void Awake()
+    {
+        _count = 0;
+    }
 
     private void OnEnable()
     {
@@ -33,6 +42,17 @@ class Counter : MonoBehaviour
     private void Increase()
     {
         _count++;
+
+        CountChanged?.Invoke();
+
+        UpdateCount();
+    }
+
+    public void Decrease(int count)
+    {
+        _count -= count;
+
+        CountChanged?.Invoke();
 
         UpdateCount();
     }

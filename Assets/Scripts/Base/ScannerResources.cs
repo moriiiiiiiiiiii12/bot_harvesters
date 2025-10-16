@@ -10,8 +10,13 @@ public class ScannerResources : MonoBehaviour
     [SerializeField] private float _scanInterval = 1f;
     [SerializeField] private LayerMask _resourceLayerMask;
 
-    private ResourceStorage _storage = new ResourceStorage();
+    private ResourceStorage _storage;
     private Coroutine _scanCoroutine;
+
+    private void Awake()
+    {
+        _storage = new ResourceStorage();       
+    }
 
     private void OnEnable()
     {
@@ -40,6 +45,7 @@ public class ScannerResources : MonoBehaviour
         while (enabled == true)
         {
             UpdateResourceLists();
+            
             yield return waitForSeconds;
         }
     }

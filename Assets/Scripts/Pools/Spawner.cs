@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-
 public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
     [Header("Необходимые компоненты: ")]
@@ -14,49 +13,60 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
     protected List<T> ActiveObjects = new();
     protected ObjectPool<T> Pool;
 
-    public int CountActiveObjects { get; private set; } = 0;
+    public int CountActiveObjects { get; private set; }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
-        Pool = new ObjectPool<T>
-        (
-            createFunc: () =>
-            {
-                T prefab = Instantiate(Prefab);
-                prefab.gameObject.SetActive(false);
+        CountActiveObjects = 0;
 
-                return prefab;
-            },
-            actionOnGet: (prefab) =>
-            {
-                CountActiveObjects++;
-                ActionOnGet(prefab);
+        InitializePool();
+    }
 
-                ActiveObjects.Add(prefab);
-            },
-            actionOnRelease: (prefab) =>
-            {
-                CountActiveObjects--;
-                ActionOnRelease(prefab);
-
-                ActiveObjects.Remove(prefab);
-            },
-            actionOnDestroy: (prefab) =>
-            {
-                Destroy(prefab.gameObject);
-            },
+    private void InitializePool()
+    {
+        Pool = new ObjectPool<T>(
+            createFunc: CreateInstance,
+            actionOnGet: OnGet,
+            actionOnRelease: OnRelease,
+            actionOnDestroy: OnDestroyObject,
             collectionCheck: true,
             defaultCapacity: PoolSize,
             maxSize: PoolSize
         );
     }
 
-    protected void ActionOnGet(T prefab)
+    private T CreateInstance()
+    {
+        T instance = Instantiate(Prefab);
+        instance.gameObject.SetActive(false);
+        return instance;
+    }
+
+    private void OnGet(T prefab)
+    {
+        CountActiveObjects++;
+        ActionOnGet(prefab);
+        ActiveObjects.Add(prefab);
+    }
+
+    private void OnRelease(T prefab)
+    {
+        CountActiveObjects--;
+        ActionOnRelease(prefab);
+        ActiveObjects.Remove(prefab);
+    }
+
+    private void OnDestroyObject(T prefab)
+    {
+        Destroy(prefab.gameObject);
+    }
+
+    protected virtual void ActionOnGet(T prefab)
     {
         prefab.gameObject.SetActive(true);
     }
 
-    protected void ActionOnRelease(T prefab)
+    protected virtual void ActionOnRelease(T prefab)
     {
         prefab.gameObject.SetActive(false);
     }

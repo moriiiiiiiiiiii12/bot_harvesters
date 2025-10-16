@@ -21,7 +21,7 @@ public class Resource : MonoBehaviour
         }
     }
 
-    public void Take()
+    public void PickUp()
     {
         if (_rigidbody != null)
             _rigidbody.isKinematic = true;

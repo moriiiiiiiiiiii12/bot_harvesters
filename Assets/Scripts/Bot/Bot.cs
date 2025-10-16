@@ -32,8 +32,8 @@ public class Bot : MonoBehaviour
         if (IsBusy)
             return;
 
-        _targetTransform = targetResources;
         _resourceCapture.SetResourceId(Id);
+        _targetTransform = targetResources;
 
         IsBusy = true;
         _movement.SetTarget(_targetTransform);
