@@ -49,6 +49,9 @@ public class Base : MonoBehaviour
 
     public void SetFlag(Vector3 position)
     {
+        if (_bots.Count <= 1)
+            return;
+
         _flag.Set(position);
 
         _baseFactory.BaseCreate += UnsetFlag;
@@ -72,8 +75,6 @@ public class Base : MonoBehaviour
 
     public void AddBot(Bot bot)
     {
-        Debug.Log(gameObject.name + " бот добавлен");
-
         _bots.Add(bot);
 
         bot.Reset();
@@ -97,15 +98,18 @@ public class Base : MonoBehaviour
         for (int index = 0; index < _bots.Count; index++)
         {
             Bot candidateBot = _bots[index];
+
             if (candidateBot != null && candidateBot.IsBusy == false)
             {
                 _bots.RemoveAt(index);
                 freeBot = candidateBot;
+
                 return true;
             }
         }
 
         freeBot = null;
+
         return false;
     }
 
