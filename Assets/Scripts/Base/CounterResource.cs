@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-class CounterResource : MonoBehaviour
+public class CounterResource : MonoBehaviour
 {
     [SerializeField] private DropPoint _dropPoint;
     [SerializeField] private Text _textHeader;

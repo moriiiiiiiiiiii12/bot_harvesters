@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class Bot : MonoBehaviour
 {
     [SerializeField] private Movement _movement;
@@ -10,16 +9,20 @@ public class Bot : MonoBehaviour
     private Transform _targetTransform;
     private Resource _tempResource;
 
+    private bool _isMovingToDropPoint = false;
+
     public bool IsBusy { get; private set; } = false;
 
     private void OnEnable()
     {
         _resourceCapture.TakeObject += OnTookResource;
+        _movement.ReachTarget += OnReachTarget;
     }
 
     private void OnDisable()
     {
         _resourceCapture.TakeObject -= OnTookResource;
+        _movement.ReachTarget -= OnReachTarget;
     }
 
     public void SetDropPoint(DropPoint dropPoint)
@@ -27,13 +30,17 @@ public class Bot : MonoBehaviour
         _dropPoint = dropPoint;
     }
 
-    public void SetTarget(Transform targetResources, int Id)
+    public void SetTarget(Transform targetResources, int resourceId)
     {
-        if (IsBusy)
+        if (IsBusy == true)
+        {
             return;
+        }
 
-        _resourceCapture.SetResourceId(Id);
+        _resourceCapture.SetResourceId(resourceId);
         _targetTransform = targetResources;
+
+        _isMovingToDropPoint = false;
 
         IsBusy = true;
         _movement.SetTarget(_targetTransform);
@@ -43,15 +50,24 @@ public class Bot : MonoBehaviour
     {
         _tempResource = resource;
 
+        _isMovingToDropPoint = true;
         _movement.SetTarget(_dropPoint.transform);
-
-        _movement.ReachTarget += OnReachTarget;
     }
 
     private void OnReachTarget()
     {
-        if (_tempResource == null) return; 
-            GiveAway(_tempResource);
+        if (_isMovingToDropPoint == false)
+        {
+            return;
+        }
+
+        if (_tempResource == null)
+        {
+            Reset();
+            return;
+        }
+
+        GiveAway(_tempResource);
     }
 
     private void GiveAway(Resource resource)
@@ -65,8 +81,10 @@ public class Bot : MonoBehaviour
     {
         _tempResource = null;
         _targetTransform = null;
+
+        _isMovingToDropPoint = false;
+
         IsBusy = false;
-        _movement.ReachTarget -= OnReachTarget;
         _movement.Reset();
     }
 }

@@ -46,7 +46,6 @@ public class ResourceCapture : MonoBehaviour
     {
         if (_resource == null)
         {
-            Debug.Log("что");
             return;
         }
 

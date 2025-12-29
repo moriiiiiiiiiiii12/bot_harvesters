@@ -1,6 +1,6 @@
 using UnityEngine;
 
-abstract class Factory : MonoBehaviour
+public abstract class Factory : MonoBehaviour
 {
     [SerializeField] protected CounterResource _counterResource;
     [SerializeField] protected int _countResourceProduce = 3;

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 
-public class ResourceSpawner : Spawner<Resource>
+public class SpawnerResource : Spawner<Resource>
 {
     [SerializeField] private Renderer _arenaRenderer;
     [SerializeField] private float _spawnIntervalSeconds = 3.0f;
@@ -28,11 +28,13 @@ public class ResourceSpawner : Spawner<Resource>
 
     private IEnumerator SpawnLoopCoroutine()
     {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(_spawnIntervalSeconds);
+
         while (enabled == true)
         {
             TrySpawnOne();
             
-            yield return new WaitForSeconds(_spawnIntervalSeconds);
+            yield return waitForSeconds;
         }
     }
 

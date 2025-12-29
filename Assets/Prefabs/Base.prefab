@@ -399,7 +399,6 @@ MonoBehaviour:
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 3
   _spawnerBot: {fileID: 7145162835539652907}
-  _base: {fileID: 2653958452310384422}
 --- !u!1 &6792513593488114631
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,6 +565,8 @@ GameObject:
   - component: {fileID: 1547827455620249826}
   - component: {fileID: 2653958452310384422}
   - component: {fileID: 7801811424303382309}
+  - component: {fileID: 906447094859834668}
+  - component: {fileID: 5782800381540248479}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -678,13 +679,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dropPoint: {fileID: 3031738189580980349}
-  _storageParent: {fileID: 7574311431535075195}
   _scannerResources: {fileID: 5850993919704438562}
+  _assignInterval: 0.1
   _bots: []
-  _flag: {fileID: 7169194227593079873}
-  _assignInterval: 0.5
-  _baseFactory: {fileID: 6255676000114021027}
-  _botFactory: {fileID: 4128922747324697316}
 --- !u!114 &7801811424303382309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,6 +695,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _renderer: {fileID: 4151069507415783301}
+--- !u!114 &906447094859834668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8533817253377829729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03a8d4a05b410594e82d2e5815ddf7eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flag: {fileID: 7169194227593079873}
+--- !u!114 &5782800381540248479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8533817253377829729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55f281c63ce284349a9cc4720c9c64a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sourceBase: {fileID: 2653958452310384422}
+  _botFactory: {fileID: 4128922747324697316}
+  _baseFactory: {fileID: 6255676000114021027}
+  _flagPlacer: {fileID: 906447094859834668}
 --- !u!1 &8553271344176687619
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,7 +890,6 @@ MonoBehaviour:
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 5
   _spawnerBase: {fileID: 5358890057081820210}
-  _flag: {fileID: 1076199743383796117}
 --- !u!114 &5358890057081820210
 MonoBehaviour:
   m_ObjectHideFlags: 0

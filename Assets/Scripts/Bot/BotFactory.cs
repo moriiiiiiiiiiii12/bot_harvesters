@@ -1,22 +1,27 @@
+using System;
 using UnityEngine;
 
-
-class BotFactory : Factory
+public class BotFactory : Factory
 {
     [SerializeField] private SpawnerBot _spawnerBot;
-    [SerializeField] private Base _base;
+
+    public event Action<Bot> BotCreate;
 
     public override void Produce()
     {
         if (_counterResource.Count >= _countResourceProduce)
         {
-            Bot bot = _spawnerBot.TrySpawnOne();
+            Bot createdBot = _spawnerBot.TrySpawnOne();
 
-            if (bot != null)
+            if (createdBot != null)
             {
                 _counterResource.Decrease(_countResourceProduce);
-                _base.AddBot(bot);   
+
+                if (BotCreate != null)
+                {
+                    BotCreate.Invoke(createdBot);
+                }
             }
         }
     }
-} 
+}

@@ -1,39 +1,37 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Base : MonoBehaviour
 {
     [SerializeField] private DropPoint _dropPoint;
-    [SerializeField] private Transform _storageParent;
     [SerializeField] private ScannerResources _scannerResources;
-    [SerializeField] private List<Bot> _bots;
-    [SerializeField] private Flag _flag;
     [SerializeField] private float _assignInterval = 0.1f;
-    [SerializeField] private BaseFactory _baseFactory;
-    [SerializeField] private BotFactory _botFactory;
+    [SerializeField] private List<Bot> _bots = new List<Bot>();
 
     private Coroutine _assignRoutine;
 
+    public event Action<Base, Vector3> ExpansionRequested;
+
     public void Init()
     {
-        _bots = new List<Bot>();
+        _bots.Clear();
     }
 
     private void Start()
     {
-        foreach (Bot bot in _bots)
+        for (int index = 0; index < _bots.Count; index++)
         {
+            Bot bot = _bots[index];
+
             if (bot == null)
+            {
                 continue;
+            }
 
             bot.SetDropPoint(_dropPoint);
         }
-
-        _flag.Unset();
-
-        _baseFactory.enabled = false;
     }
 
     private void OnEnable()
@@ -44,33 +42,27 @@ public class Base : MonoBehaviour
     private void OnDisable()
     {
         if (_assignRoutine != null)
+        {
             StopCoroutine(_assignRoutine);
+        }
     }
 
     public void SetFlag(Vector3 position)
     {
-        if (_bots.Count <= 1)
-            return;
-
-        _flag.Set(position);
-
-        _baseFactory.BaseCreate += UnsetFlag;
-        _baseFactory.Produce();
-     
-        _baseFactory.enabled = true;
-        _botFactory.enabled = false;
+        RequestExpansion(position);
     }
 
-    public void UnsetFlag(Base @base)
+    public void RequestExpansion(Vector3 position)
     {
-        _flag.Unset();
-     
-        _baseFactory.BaseCreate -= UnsetFlag;
+        if (_bots.Count > 1 == false)
+        {
+            return;
+        }
 
-        _baseFactory.enabled = false;
-        _botFactory.enabled = true;
-
-        StartCoroutine(GiveBotWhenAvailable(@base));
+        if (ExpansionRequested != null)
+        {
+            ExpansionRequested.Invoke(this, position);
+        }
     }
 
     public void AddBot(Bot bot)
@@ -80,20 +72,8 @@ public class Base : MonoBehaviour
         bot.Reset();
         bot.SetDropPoint(_dropPoint);
     }
-    
-    private IEnumerator GiveBotWhenAvailable(Base receivingBase)
-    {
-        Bot availableBot = null;
 
-        yield return new WaitUntil(() => TryTakeFreeBot(out availableBot));
-
-        if (receivingBase != null && availableBot != null)
-        {
-            receivingBase.AddBot(availableBot);
-        }
-    }
-
-    private bool TryTakeFreeBot(out Bot freeBot)
+    public bool TryTakeFreeBot(out Bot freeBot)
     {
         for (int index = 0; index < _bots.Count; index++)
         {
@@ -109,7 +89,6 @@ public class Base : MonoBehaviour
         }
 
         freeBot = null;
-
         return false;
     }
 
@@ -117,10 +96,9 @@ public class Base : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(_assignInterval);
 
-        while (enabled)
+        while (enabled == true)
         {
             AssignTasksIfNeeded();
-            
             yield return waitForSeconds;
         }
     }
@@ -128,16 +106,22 @@ public class Base : MonoBehaviour
     private void AssignTasksIfNeeded()
     {
         if (_bots.Count == 0)
-            return;
-
-        for (int i = 0; i < _bots.Count; i++)
         {
-            Bot bot = _bots[i];
+            return;
+        }
 
-            if (bot == null || bot.IsBusy)
+        for (int index = 0; index < _bots.Count; index++)
+        {
+            Bot bot = _bots[index];
+
+            if (bot == null || bot.IsBusy == true)
+            {
                 continue;
+            }
 
-            if (_scannerResources.TryGetResource(out Resource resource))
+            Resource resource;
+
+            if (_scannerResources.TryGetResource(out resource) == true)
             {
                 bot.SetTarget(resource.transform, resource.Id);
             }

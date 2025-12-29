@@ -1,22 +1,47 @@
 using System;
 using UnityEngine;
 
-class BaseFactory : Factory
+public class BaseFactory : Factory
 {
     [SerializeField] private SpawnerBase _spawnerBase;
-    [SerializeField] private Transform _flag;
 
     public event Action<Base> BaseCreate;
 
+    private Vector3 _spawnPosition;
+    private bool _hasSpawnPosition;
+
+    public void SetSpawnPosition(Vector3 position)
+    {
+        _spawnPosition = position;
+        _hasSpawnPosition = true;
+    }
+
+    public void ClearSpawnPosition()
+    {
+        _hasSpawnPosition = false;
+    }
+
     public override void Produce()
     {
+        if (_hasSpawnPosition == false)
+        {
+            return;
+        }
+
         if (_counterResource.Count >= _countResourceProduce)
         {
-            Base @base = _spawnerBase.TrySpawnOne(_flag.position);
+            Base createdBase = _spawnerBase.TrySpawnOne(_spawnPosition);
 
-            _counterResource.Decrease(_countResourceProduce);
+            if (createdBase != null)
+            {
+                _hasSpawnPosition = false;
+                _counterResource.Decrease(_countResourceProduce);
 
-            BaseCreate?.Invoke(@base);
+                if (BaseCreate != null)
+                {
+                    BaseCreate.Invoke(createdBase);
+                }
+            }
         }
     }
 }

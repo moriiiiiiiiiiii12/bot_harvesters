@@ -576,6 +576,10 @@ PrefabInstance:
       propertyPath: _bots.Array.data[0]
       value: 
       objectReference: {fileID: 1099477007}
+    - target: {fileID: 5656684382004162138, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 963194227}
     - target: {fileID: 8533817253377829729, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: m_Name
       value: Base
@@ -620,7 +624,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3865283592747464851, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
