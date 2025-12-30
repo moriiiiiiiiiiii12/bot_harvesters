@@ -12,9 +12,11 @@ class BaseSelectable : Selectable
 
     public override void OnWorldClick(RaycastHit hit)
     {
-        if (hit.collider.TryGetComponent(out Map map))
+        Map map;
+
+        if (hit.collider.TryGetComponent(out map) == true)
         {
-            _base.SetFlag(hit.point);
+            _base.RequestExpansion(hit.point);
 
             RequestDeselect();
         }

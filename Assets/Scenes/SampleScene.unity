@@ -580,6 +580,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 5850993919704438562, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
+      propertyPath: _resourceLayerMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 8533817253377829729, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: m_Name
       value: Base

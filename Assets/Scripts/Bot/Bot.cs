@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Bot : MonoBehaviour
@@ -6,12 +7,21 @@ public class Bot : MonoBehaviour
     [SerializeField] private ResourceCapture _resourceCapture;
     [SerializeField] private DropPoint _dropPoint;
 
-    private Transform _targetTransform;
-    private Resource _tempResource;
+    private Resource _reservedResource;
+    private Resource _carriedResource;
 
-    private bool _isMovingToDropPoint = false;
+    private bool _isMovingToDropPoint;
 
-    public bool IsBusy { get; private set; } = false;
+    private Coroutine _waitForCaptureRoutine;
+    private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
+
+    public int ReservationId { get; private set; }
+    public bool IsBusy { get; private set; }
+
+    private void Awake()
+    {
+        ReservationId = GetInstanceID();
+    }
 
     private void OnEnable()
     {
@@ -23,6 +33,12 @@ public class Bot : MonoBehaviour
     {
         _resourceCapture.TakeObject -= OnTookResource;
         _movement.ReachTarget -= OnReachTarget;
+
+        if (_waitForCaptureRoutine != null)
+        {
+            StopCoroutine(_waitForCaptureRoutine);
+            _waitForCaptureRoutine = null;
+        }
     }
 
     public void SetDropPoint(DropPoint dropPoint)
@@ -30,25 +46,33 @@ public class Bot : MonoBehaviour
         _dropPoint = dropPoint;
     }
 
-    public void SetTarget(Transform targetResources, int resourceId)
+    public bool TrySetTarget(Resource resource)
     {
         if (IsBusy == true)
         {
-            return;
+            return false;
         }
 
-        _resourceCapture.SetResourceId(resourceId);
-        _targetTransform = targetResources;
+        _reservedResource = resource;
+        _resourceCapture.SetTarget(resource, ReservationId);
 
         _isMovingToDropPoint = false;
 
         IsBusy = true;
-        _movement.SetTarget(_targetTransform);
+        _movement.SetTarget(resource.transform);
+
+        return true;
     }
 
     private void OnTookResource(Resource resource)
     {
-        _tempResource = resource;
+        if (_waitForCaptureRoutine != null)
+        {
+            StopCoroutine(_waitForCaptureRoutine);
+            _waitForCaptureRoutine = null;
+        }
+
+        _carriedResource = resource;
 
         _isMovingToDropPoint = true;
         _movement.SetTarget(_dropPoint.transform);
@@ -58,16 +82,34 @@ public class Bot : MonoBehaviour
     {
         if (_isMovingToDropPoint == false)
         {
+            if (_waitForCaptureRoutine != null)
+            {
+                StopCoroutine(_waitForCaptureRoutine);
+            }
+
+            _waitForCaptureRoutine = StartCoroutine(WaitForCaptureRoutine());
             return;
         }
 
-        if (_tempResource == null)
+        if (_carriedResource == null)
         {
             Reset();
             return;
         }
 
-        GiveAway(_tempResource);
+        GiveAway(_carriedResource);
+    }
+
+    private IEnumerator WaitForCaptureRoutine()
+    {
+        yield return _waitForFixedUpdate;
+
+        _waitForCaptureRoutine = null;
+
+        if (_isMovingToDropPoint == false)
+        {
+            Reset();
+        }
     }
 
     private void GiveAway(Resource resource)
@@ -79,8 +121,21 @@ public class Bot : MonoBehaviour
 
     public void Reset()
     {
-        _tempResource = null;
-        _targetTransform = null;
+        if (_waitForCaptureRoutine != null)
+        {
+            StopCoroutine(_waitForCaptureRoutine);
+            _waitForCaptureRoutine = null;
+        }
+
+        if (_carriedResource == null && _reservedResource != null)
+        {
+            _reservedResource.CancelReservation(ReservationId);
+        }
+
+        _resourceCapture.Release();
+
+        _reservedResource = null;
+        _carriedResource = null;
 
         _isMovingToDropPoint = false;
 

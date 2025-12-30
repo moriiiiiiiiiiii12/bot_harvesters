@@ -47,11 +47,6 @@ public class Base : MonoBehaviour
         }
     }
 
-    public void SetFlag(Vector3 position)
-    {
-        RequestExpansion(position);
-    }
-
     public void RequestExpansion(Vector3 position)
     {
         if (_bots.Count > 1 == false)
@@ -67,6 +62,11 @@ public class Base : MonoBehaviour
 
     public void AddBot(Bot bot)
     {
+        if (_bots.Contains(bot) == true)
+        {
+            return;
+        }
+
         _bots.Add(bot);
 
         bot.Reset();
@@ -83,7 +83,6 @@ public class Base : MonoBehaviour
             {
                 _bots.RemoveAt(index);
                 freeBot = candidateBot;
-
                 return true;
             }
         }
@@ -121,10 +120,10 @@ public class Base : MonoBehaviour
 
             Resource resource;
 
-            if (_scannerResources.TryGetResource(out resource) == true)
+            if (_scannerResources.TryGetResource(bot.ReservationId, out resource) == true)
             {
-                bot.SetTarget(resource.transform, resource.Id);
-            }
+                bot.TrySetTarget(resource);
+            } 
             else
             {
                 break;

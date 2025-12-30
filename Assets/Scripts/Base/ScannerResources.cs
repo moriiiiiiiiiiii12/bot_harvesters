@@ -33,9 +33,9 @@ public class ScannerResources : MonoBehaviour
         _storage.Clear();
     }
 
-    public bool TryGetResource(out Resource resource)
+    public bool TryGetResource(int reservationId, out Resource resource)
     {
-        return _storage.TryDequeue(out resource);
+        return _storage.TryDequeue(reservationId, out resource);
     }
 
     private IEnumerator ScanCoroutine()

@@ -4,38 +4,37 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private CameraControls controls;
-    private Vector2 mouseDelta;
-    private bool isMiddleButtonHeld;
-
-    public float moveSpeed = 0.1f; 
+    [SerializeField] private float _moveSpeed = 0.1f; 
+    private CameraControls _controls;
+    private Vector2 _mouseDelta;
+    private bool _isMiddleButtonHeld;
 
     private void Awake()
     {
-        controls = new CameraControls();
+        _controls = new CameraControls();
 
-        controls.Camera.MouseDelta.performed += ctx => mouseDelta = ctx.ReadValue<Vector2>();
-        controls.Camera.MouseDelta.canceled += ctx => mouseDelta = Vector2.zero;
+        _controls.Camera.MouseDelta.performed += ctx => _mouseDelta = ctx.ReadValue<Vector2>();
+        _controls.Camera.MouseDelta.canceled += ctx => _mouseDelta = Vector2.zero;
 
-        controls.Camera.MiddleClick.performed += _ => isMiddleButtonHeld = true;
-        controls.Camera.MiddleClick.canceled += _ => isMiddleButtonHeld = false;
+        _controls.Camera.MiddleClick.performed += _ => _isMiddleButtonHeld = true;
+        _controls.Camera.MiddleClick.canceled += _ => _isMiddleButtonHeld = false;
     }
 
     private void OnEnable()
     {
-        controls.Enable();
+        _controls.Enable();
     }
 
     private void OnDisable()
     {
-        controls.Disable();
+        _controls.Disable();
     }
 
     private void Update()
     {
-        if (isMiddleButtonHeld)
+        if (_isMiddleButtonHeld == true)
         {
-            transform.position += new Vector3(-mouseDelta.x, 0, -mouseDelta.y) * moveSpeed;
+            transform.position += new Vector3(-_mouseDelta.x, 0, -_mouseDelta.y) * _moveSpeed;
         }
     }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SelectionController : MonoBehaviour
+public class Selection : MonoBehaviour
 {
     [SerializeField] private Camera _mainCamera;
     private CameraControls _controls;
@@ -9,8 +9,7 @@ public class SelectionController : MonoBehaviour
 
     private void Awake()
     {
-        if (_mainCamera == null)
-            _mainCamera = Camera.main;
+        _mainCamera = Camera.main;
 
         _controls = new CameraControls();
         _controls.Camera.LeftClick.performed += _ => OnClick();
