@@ -7,12 +7,12 @@ public abstract class Factory : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        _counterResource.CountChanged += Produce;
+        _counterResource.CountIncreased += Produce;
     }
 
     protected virtual void OnDisable()
     {
-        _counterResource.CountChanged -= Produce;
+        _counterResource.CountIncreased -= Produce;
     }
 
     public abstract void Produce();

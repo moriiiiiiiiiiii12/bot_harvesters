@@ -12,7 +12,8 @@ public class CounterResource : MonoBehaviour
     private int _count;
     public int Count => _count;
 
-    public event Action CountChanged;
+    public event Action CountIncreased;
+    public event Action CountDecreased;
 
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class CounterResource : MonoBehaviour
     {
         _count++;
 
-        CountChanged?.Invoke();
+        CountIncreased?.Invoke();
 
         UpdateCount();
     }
@@ -52,7 +53,7 @@ public class CounterResource : MonoBehaviour
     {
         _count -= count;
 
-        CountChanged?.Invoke();
+        CountDecreased?.Invoke();
 
         UpdateCount();
     }
