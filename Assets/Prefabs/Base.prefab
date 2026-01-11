@@ -345,7 +345,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5921440128582259602}
-  - component: {fileID: 7145162835539652907}
   - component: {fileID: 4128922747324697316}
   m_Layer: 0
   m_Name: BotFactory
@@ -369,21 +368,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1401320104507553150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7145162835539652907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5618827181811985098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7038f84f1a0328542b118f958fa8a411, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prefab: {fileID: 7371005527196408059, guid: df7c338dbb63b4b4e851d018ead9c793, type: 3}
-  PoolSize: 5
-  _spawnPoint: {fileID: 9083847732082072782}
 --- !u!114 &4128922747324697316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,7 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 3
-  _spawnerBot: {fileID: 7145162835539652907}
+  _spawnerBotRef: {fileID: 11400000, guid: 54b0d25d143b0804b8bad49b63ce3eab, type: 2}
 --- !u!1 &6792513593488114631
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,7 +836,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7968983225781859737}
   - component: {fileID: 6255676000114021027}
-  - component: {fileID: 5358890057081820210}
   m_Layer: 0
   m_Name: BaseFactory
   m_TagString: Untagged
@@ -889,22 +872,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 5
-  _spawnerBase: {fileID: 5358890057081820210}
---- !u!114 &5358890057081820210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9034857981645145433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1422ad3f7a5d294eb6cb861acf21f1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prefab: {fileID: 2653958452310384422}
-  PoolSize: 100
-  _basePrefab: {fileID: 11400000, guid: 4a5c7294afb5c1e4d95f940aa4ba3b85, type: 2}
+  _spawnerBaseRef: {fileID: 11400000, guid: 47f2f5d5a723f454dbea23b683b9a029, type: 2}
 --- !u!1001 &1242436595946398606
 PrefabInstance:
   m_ObjectHideFlags: 0

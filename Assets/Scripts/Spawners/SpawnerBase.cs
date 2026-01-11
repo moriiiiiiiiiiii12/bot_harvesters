@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class SpawnerBase : Spawner<Base>
 {
-    [SerializeField] private BasePrefab _basePrefab;
+    [SerializeField] private BaseRef _basePrefab;
 
     protected override void Awake()
     {
-        Prefab = _basePrefab.GetBase();
+        Prefab = _basePrefab.Value;
 
         base.Awake();
     }

@@ -7,6 +7,7 @@ public class BaseExpansion : MonoBehaviour
     [SerializeField] private BotFactory _botFactory;
     [SerializeField] private BaseFactory _baseFactory;
     [SerializeField] private FlagPlacer _flagPlacer;
+    [SerializeField] private int _maxCountBot = 3;
 
     private Coroutine _transferRoutine;
     private bool _isExpansionInProgress;
@@ -24,6 +25,9 @@ public class BaseExpansion : MonoBehaviour
         _sourceBase.ExpansionRequested += OnExpansionRequested;
         _botFactory.BotCreate += OnBotCreated;
         _baseFactory.BaseCreate += OnBaseCreated;
+
+        if(_maxCountBot <= _sourceBase.CurrentCountBots) 
+            _botFactory.enabled = false;
     }
 
     private void OnDisable()
@@ -41,6 +45,9 @@ public class BaseExpansion : MonoBehaviour
     private void OnBotCreated(Bot bot)
     {
         _sourceBase.AddBot(bot);
+
+        if(_maxCountBot <= _sourceBase.CurrentCountBots) 
+            _botFactory.enabled = false;
     }
 
     private void OnExpansionRequested(Base baseSender, Vector3 position)
@@ -54,7 +61,7 @@ public class BaseExpansion : MonoBehaviour
 
         _flagPlacer.Set(position);
         _baseFactory.SetSpawnPosition(position);
-
+        
         _botFactory.enabled = false;
         _baseFactory.enabled = true;
 
@@ -72,7 +79,9 @@ public class BaseExpansion : MonoBehaviour
         _baseFactory.ClearSpawnPosition();
 
         _baseFactory.enabled = false;
-        _botFactory.enabled = true;
+
+        if(_maxCountBot > _sourceBase.CurrentCountBots) 
+            _botFactory.enabled = true;
 
         if (_transferRoutine != null)
         {

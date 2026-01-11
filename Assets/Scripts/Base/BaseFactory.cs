@@ -3,12 +3,20 @@ using UnityEngine;
 
 public class BaseFactory : Factory
 {
-    [SerializeField] private SpawnerBase _spawnerBase;
+    [SerializeField] private SpawnerRef _spawnerBaseRef;
+    private SpawnerBase _spawnerBase;
 
     public event Action<Base> BaseCreate;
 
     private Vector3 _spawnPosition;
     private bool _hasSpawnPosition;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable(); 
+
+        _spawnerBase = (SpawnerBase)_spawnerBaseRef.Value;
+    }
 
     public void SetSpawnPosition(Vector3 position)
     {

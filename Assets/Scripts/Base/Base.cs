@@ -14,6 +14,8 @@ public class Base : MonoBehaviour
 
     public event Action<Base, Vector3> ExpansionRequested;
 
+    public int CurrentCountBots => _bots.Count;
+
     public void Init()
     {
         _bots.Clear();
@@ -21,15 +23,8 @@ public class Base : MonoBehaviour
 
     private void Start()
     {
-        for (int index = 0; index < _bots.Count; index++)
+        foreach (Bot bot in _bots)
         {
-            Bot bot = _bots[index];
-
-            if (bot == null)
-            {
-                continue;
-            }
-
             bot.SetDropPoint(_dropPoint);
         }
     }

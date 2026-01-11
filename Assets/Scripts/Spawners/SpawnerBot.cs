@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class SpawnerBot : Spawner<Bot>
 {
-    [SerializeField] private Transform _spawnPoint;
-
-    public Bot TrySpawnOne()
+    public Bot TrySpawnOne(Vector3 position)
     {
         if (CountActiveObjects >= PoolSize)
         {
@@ -14,7 +12,7 @@ public class SpawnerBot : Spawner<Bot>
 
         Bot bot = Pool.Get();
 
-        bot.transform.position = _spawnPoint.position;
+        bot.transform.position = position;
 
         return bot;
     }
