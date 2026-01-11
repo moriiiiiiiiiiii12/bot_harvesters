@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Mover : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _arriveDistance = 0.3f;
@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour
 
     public event Action ReachTarget;
 
-    public void SetTarget(Transform target)
+    public void MoveTo(Transform target)
     {
         Reset();
 
@@ -24,12 +24,18 @@ public class Movement : MonoBehaviour
     {
         while (enabled == true)
         {
-            MoveTowardsTarget();
+            Move();
 
             if (Reached() == true)
             {
-                ReachTarget?.Invoke();
-                Reset();
+                _target = null;
+                _coroutine = null;
+
+                if (ReachTarget != null)
+                {
+                    ReachTarget.Invoke();
+                }
+
                 yield break;
             }
 
@@ -37,7 +43,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void MoveTowardsTarget()
+    private void Move()
     {
         if (_target != null)
         {

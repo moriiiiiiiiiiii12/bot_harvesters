@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -17,6 +18,8 @@ public abstract class Spawner<T> : Spawner where T : MonoBehaviour
 
     protected List<T> ActiveObjects = new();
     protected ObjectPool<T> Pool;
+
+    public event Action<T> CreateObject; 
 
     public int CountActiveObjects { get; private set; }
 
@@ -47,6 +50,9 @@ public abstract class Spawner<T> : Spawner where T : MonoBehaviour
     {
         T instance = Instantiate(Prefab);
         instance.gameObject.SetActive(false);
+
+        CreateObject?.Invoke(instance);
+
         return instance;
     }
 

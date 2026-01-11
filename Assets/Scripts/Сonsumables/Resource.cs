@@ -6,21 +6,14 @@ public class Resource : MonoBehaviour
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private Collider _collider;
 
-    private int _reservedById;
     private bool _isPickedUp;
 
     public int Id { get; private set; }
-
-    public bool IsReserved
-    {
-        get { return _reservedById != 0; }
-    }
 
     public event Action<Resource> ReleaseRequested;
 
     private void OnEnable()
     {
-        _reservedById = default;
         _isPickedUp = false;
 
         if (_collider != null)
@@ -38,39 +31,8 @@ public class Resource : MonoBehaviour
         Id = IdGenerator.GenerateId();
     }
 
-    public bool TryReserve(int reservationId)
+    public bool TryPickUp()
     {
-        if (_reservedById != 0)
-        {
-            return _reservedById == reservationId;
-        }
-
-        _reservedById = reservationId;
-        return true;
-    }
-
-    public void CancelReservation(int reservationId)
-    {
-        if (_reservedById != reservationId)
-        {
-            return;
-        }
-
-        if (_isPickedUp == true)
-        {
-            return;
-        }
-
-        _reservedById = default;
-    }
-
-    public bool TryPickUp(int reservationId)
-    {
-        if (_reservedById != reservationId)
-        {
-            return false;
-        }
-
         if (_isPickedUp == true)
         {
             return false;
@@ -114,7 +76,6 @@ public class Resource : MonoBehaviour
 
     public void Reset()
     {
-        _reservedById = default;
         _isPickedUp = false;
 
         if (_collider != null)

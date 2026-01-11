@@ -1,58 +1,67 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class ResourceStorage
+public class ResourceStorage : MonoBehaviour
 {
-    private readonly List<Resource> _availableResources = new List<Resource>();
+    [SerializeField] private SpawnerResource _spawnerResource;
+    [SerializeField] private ResourceStorageRef _resourceStorageRef;
 
-    public void Clear()
+    private readonly Dictionary<Resource, bool> _isReservedByResource = new Dictionary<Resource, bool>();
+
+    private void Awake()
     {
-        _availableResources.Clear();
+        _resourceStorageRef.Set(this);
     }
 
-    public void RefreshAvailable(List<Resource> detectedResources)
+    private void OnEnable()
     {
-        _availableResources.Clear();
-
-        for (int index = 0; index < detectedResources.Count; index++)
-        {
-            Resource resource = detectedResources[index];
-
-            if (resource == null)
-            {
-                continue;
-            }
-
-            if (resource.IsReserved == true)
-            {
-                continue;
-            }
-
-            _availableResources.Add(resource);
-        }
+        _spawnerResource.CreateObject += AddResource;
     }
 
-    public bool TryDequeue(int reservationId, out Resource resource)
+    private void OnDisable()
     {
-        for (int index = 0; index < _availableResources.Count; index++)
+        _spawnerResource.CreateObject -= AddResource;
+    }
+
+    private void AddResource(Resource resource)
+    {
+        if (_isReservedByResource.ContainsKey(resource) == true)
         {
-            Resource candidateResource = _availableResources[index];
-
-            if (candidateResource == null)
-            {
-                continue;
-            }
-
-            if (candidateResource.TryReserve(reservationId) == false)
-            {
-                continue;
-            }
-
-            _availableResources.RemoveAt(index);
-            resource = candidateResource;
-            return true;
+            return;
         }
 
-        resource = null;
-        return false;
+        _isReservedByResource.Add(resource, false);
+    }
+
+    public bool TryReserve(Resource resource)
+    {
+        if (_isReservedByResource.ContainsKey(resource) == false)
+        {
+            return false;
+        }
+
+        if (_isReservedByResource[resource] == true)
+        {
+            return false;
+        }
+
+        _isReservedByResource[resource] = true;
+        
+        return true;
+    }
+
+    public void Unreserve(Resource resource)
+    {
+        if (_isReservedByResource.ContainsKey(resource) == false)
+        {
+            return;
+        }
+
+        if (_isReservedByResource[resource] == false)
+        {
+            return;
+        }
+
+        _isReservedByResource[resource] = false;
     }
 }

@@ -5,45 +5,20 @@ public class ResourceCapture : MonoBehaviour
 {
     [SerializeField] private Transform _holdPoint;
 
-    private Resource _expectedResource;
     private Resource _carriedResource;
-    private int _reservationId;
 
     public event Action<Resource> TakeObject;
 
-    public void SetTarget(Resource resource, int reservationId)
+    public bool TryPickUp(Resource resource)
     {
-        _expectedResource = resource;
-        _reservationId = reservationId;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (_carriedResource != null)
+        if (resource.TryPickUp() == false)
         {
-            return;
-        }
-
-        Resource resource;
-
-        if (other.TryGetComponent(out resource) == false)
-        {
-            return;
-        }
-
-        if (resource != _expectedResource)
-        {
-            return;
-        }
-
-        if (resource.TryPickUp(_reservationId) == false)
-        {
-            return;
+            return false;
         }
 
         _carriedResource = resource;
 
-        Transform parent = _holdPoint != null ? _holdPoint : transform;
+        Transform parent = _holdPoint;
         _carriedResource.transform.SetParent(parent);
 
         _carriedResource.PickUp();
@@ -52,17 +27,8 @@ public class ResourceCapture : MonoBehaviour
         {
             TakeObject.Invoke(_carriedResource);
         }
-    }
 
-    public void ClearTarget()
-    {
-        if (_carriedResource == null && _expectedResource != null)
-        {
-            _expectedResource.CancelReservation(_reservationId);
-        }
-
-        _expectedResource = null;
-        _reservationId = default;
+        return true;
     }
 
     public void Release()
@@ -73,6 +39,5 @@ public class ResourceCapture : MonoBehaviour
         }
 
         _carriedResource = null;
-        ClearTarget();
     }
 }

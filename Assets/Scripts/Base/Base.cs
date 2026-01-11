@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Base : MonoBehaviour
@@ -9,6 +10,8 @@ public class Base : MonoBehaviour
     [SerializeField] private ScannerResources _scannerResources;
     [SerializeField] private float _assignInterval = 0.1f;
     [SerializeField] private List<Bot> _bots = new List<Bot>();
+    [SerializeField] private ResourceStorageRef _resourceStorageRef;
+    private ResourceStorage _resourceStorage;
 
     private Coroutine _assignRoutine;
 
@@ -32,6 +35,10 @@ public class Base : MonoBehaviour
     private void OnEnable()
     {
         _assignRoutine = StartCoroutine(AssignRoutine());
+
+        _dropPoint.ResourceDelivered += OnResourceDelivered;
+
+        _resourceStorage = _resourceStorageRef.Value;
     }
 
     private void OnDisable()
@@ -40,6 +47,8 @@ public class Base : MonoBehaviour
         {
             StopCoroutine(_assignRoutine);
         }
+
+        _dropPoint.ResourceDelivered -= OnResourceDelivered;
     }
 
     public void RequestExpansion(Vector3 position)
@@ -70,19 +79,21 @@ public class Base : MonoBehaviour
 
     public bool TryTakeFreeBot(out Bot freeBot)
     {
+        freeBot = null;
+
         for (int index = 0; index < _bots.Count; index++)
         {
-            Bot candidateBot = _bots[index];
+            Bot bot = _bots[index];
 
-            if (candidateBot != null && candidateBot.IsBusy == false)
+            if (bot.IsBusy == false)
             {
                 _bots.RemoveAt(index);
-                freeBot = candidateBot;
+                freeBot = bot;
+
                 return true;
             }
         }
 
-        freeBot = null;
         return false;
     }
 
@@ -93,6 +104,7 @@ public class Base : MonoBehaviour
         while (enabled == true)
         {
             AssignTasksIfNeeded();
+
             yield return waitForSeconds;
         }
     }
@@ -104,18 +116,16 @@ public class Base : MonoBehaviour
             return;
         }
 
-        for (int index = 0; index < _bots.Count; index++)
+        foreach (Bot bot in _bots)
         {
-            Bot bot = _bots[index];
-
-            if (bot == null || bot.IsBusy == true)
+            if (bot.IsBusy == true)
             {
                 continue;
             }
 
             Resource resource;
 
-            if (_scannerResources.TryGetResource(bot.ReservationId, out resource) == true)
+            if (_scannerResources.TryGetResource(out resource) == true)
             {
                 bot.TrySetTarget(resource);
             } 
@@ -124,5 +134,10 @@ public class Base : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void OnResourceDelivered(Resource resource)
+    {
+        _resourceStorage.Unreserve(resource);
     }
 }

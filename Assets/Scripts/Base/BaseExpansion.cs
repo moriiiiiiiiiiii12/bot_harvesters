@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class BaseExpansion : MonoBehaviour
 {
-    [SerializeField] private Base _sourceBase;
+    [SerializeField] private Base _base;
     [SerializeField] private BotFactory _botFactory;
     [SerializeField] private BaseFactory _baseFactory;
     [SerializeField] private FlagPlacer _flagPlacer;
-    [SerializeField] private int _maxCountBot = 3;
 
     private Coroutine _transferRoutine;
     private bool _isExpansionInProgress;
@@ -22,17 +21,14 @@ public class BaseExpansion : MonoBehaviour
 
     private void OnEnable()
     {
-        _sourceBase.ExpansionRequested += OnExpansionRequested;
+        _base.ExpansionRequested += OnExpansionRequested;
         _botFactory.BotCreate += OnBotCreated;
         _baseFactory.BaseCreate += OnBaseCreated;
-
-        if(_maxCountBot <= _sourceBase.CurrentCountBots) 
-            _botFactory.enabled = false;
     }
 
     private void OnDisable()
     {
-        _sourceBase.ExpansionRequested -= OnExpansionRequested;
+        _base.ExpansionRequested -= OnExpansionRequested;
         _botFactory.BotCreate -= OnBotCreated;
         _baseFactory.BaseCreate -= OnBaseCreated;
 
@@ -44,10 +40,7 @@ public class BaseExpansion : MonoBehaviour
 
     private void OnBotCreated(Bot bot)
     {
-        _sourceBase.AddBot(bot);
-
-        if(_maxCountBot <= _sourceBase.CurrentCountBots) 
-            _botFactory.enabled = false;
+        _base.AddBot(bot);
     }
 
     private void OnExpansionRequested(Base baseSender, Vector3 position)
@@ -79,25 +72,23 @@ public class BaseExpansion : MonoBehaviour
         _baseFactory.ClearSpawnPosition();
 
         _baseFactory.enabled = false;
-
-        if(_maxCountBot > _sourceBase.CurrentCountBots) 
-            _botFactory.enabled = true;
+        _botFactory.enabled = true;
 
         if (_transferRoutine != null)
         {
             StopCoroutine(_transferRoutine);
         }
 
-        _transferRoutine = StartCoroutine(TransferBotWhenAvailable(createdBase));
+        _transferRoutine = StartCoroutine(TransferBot(createdBase));
 
         _isExpansionInProgress = false;
     }
 
-    private IEnumerator TransferBotWhenAvailable(Base receivingBase)
+    private IEnumerator TransferBot(Base receivingBase)
     {
-        Bot availableBot = null;
+        Bot availableBot;
 
-        while (_sourceBase.TryTakeFreeBot(out availableBot) == false)
+        while (_base.TryTakeFreeBot(out availableBot) == false)
         {
             yield return null;
         }

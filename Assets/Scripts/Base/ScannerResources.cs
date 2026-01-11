@@ -9,18 +9,17 @@ public class ScannerResources : MonoBehaviour
     [SerializeField] private float _scanRadius = 10f;
     [SerializeField] private float _scanInterval = 1f;
     [SerializeField] private LayerMask _resourceLayerMask;
+    [SerializeField] private ResourceStorageRef _resourceStorageRef;
 
-    private ResourceStorage _storage;
     private Coroutine _scanCoroutine;
-
-    private void Awake()
-    {
-        _storage = new ResourceStorage();       
-    }
+    private List<Resource> _detectedResources;
+    private ResourceStorage _resourceStorage;
 
     private void OnEnable()
     {
         _scanCoroutine = StartCoroutine(ScanCoroutine());
+
+        _resourceStorage = _resourceStorageRef.Value;
     }
 
     private void OnDisable()
@@ -29,13 +28,23 @@ public class ScannerResources : MonoBehaviour
         {
             StopCoroutine(_scanCoroutine);
         }
-
-        _storage.Clear();
     }
 
-    public bool TryGetResource(int reservationId, out Resource resource)
+    public bool TryGetResource(out Resource resource)
     {
-        return _storage.TryDequeue(reservationId, out resource);
+        resource = null;
+
+        foreach(Resource resource1 in _detectedResources)
+        {
+            if(_resourceStorage.TryReserve(resource1) == true)
+            {
+                resource = resource1;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private IEnumerator ScanCoroutine()
@@ -54,7 +63,7 @@ public class ScannerResources : MonoBehaviour
     {
         Collider[] detectedColliders = Physics.OverlapSphere(transform.position, _scanRadius, _resourceLayerMask);
 
-        List<Resource> detectedResources = new List<Resource>();
+        _detectedResources = new List<Resource>();
 
         for (int i = 0; i < detectedColliders.Length; i++)
         {
@@ -69,12 +78,10 @@ public class ScannerResources : MonoBehaviour
             {
                 if (resourceComponent.gameObject.activeSelf == true)
                 {
-                    detectedResources.Add(resourceComponent);
+                    _detectedResources.Add(resourceComponent);
                 }
             }
         }
-
-        _storage.RefreshAvailable(detectedResources);
     }
 
 #if UNITY_EDITOR
