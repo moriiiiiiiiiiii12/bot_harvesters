@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ScannerResources : MonoBehaviour
 {
     [SerializeField] private string _resourceTag = "Resource";
@@ -11,15 +10,17 @@ public class ScannerResources : MonoBehaviour
     [SerializeField] private LayerMask _resourceLayerMask;
     [SerializeField] private ResourceStorageRef _resourceStorageRef;
 
-    private Coroutine _scanCoroutine;
-    private List<Resource> _detectedResources;
+    private readonly List<Resource> _detectedResources = new List<Resource>();
     private ResourceStorage _resourceStorage;
+    private Coroutine _scanCoroutine;
 
     private void OnEnable()
     {
-        _scanCoroutine = StartCoroutine(ScanCoroutine());
-
         _resourceStorage = _resourceStorageRef.Value;
+
+        UpdateResourceLists();
+
+        _scanCoroutine = StartCoroutine(ScanCoroutine());
     }
 
     private void OnDisable()
@@ -27,21 +28,43 @@ public class ScannerResources : MonoBehaviour
         if (_scanCoroutine != null)
         {
             StopCoroutine(_scanCoroutine);
+            _scanCoroutine = null;
         }
+
+        _detectedResources.Clear();
     }
 
     public bool TryGetResource(out Resource resource)
     {
         resource = null;
 
-        foreach(Resource resource1 in _detectedResources)
-        {
-            if(_resourceStorage.TryReserve(resource1) == true)
-            {
-                resource = resource1;
+        Vector3 scannerPosition = transform.position;
+        float scanRadiusSqr = _scanRadius * _scanRadius;
 
-                return true;
+        for (int index = 0; index < _detectedResources.Count; index++)
+        {
+            Resource detectedResource = _detectedResources[index];
+
+            if (detectedResource.gameObject.activeInHierarchy == false)
+            {
+                continue;
             }
+
+            Vector3 offset = detectedResource.transform.position - scannerPosition;
+
+            if (offset.sqrMagnitude > scanRadiusSqr)
+            {
+                continue;
+            }
+
+            if (_resourceStorage.TryReserve(detectedResource) == false)
+            {
+                continue;
+            }
+
+            resource = detectedResource;
+            
+            return true;
         }
 
         return false;
@@ -53,34 +76,40 @@ public class ScannerResources : MonoBehaviour
 
         while (enabled == true)
         {
-            UpdateResourceLists();
-            
             yield return waitForSeconds;
+
+            UpdateResourceLists();
         }
     }
 
     private void UpdateResourceLists()
     {
+        _detectedResources.Clear();
+
         Collider[] detectedColliders = Physics.OverlapSphere(transform.position, _scanRadius, _resourceLayerMask);
 
-        _detectedResources = new List<Resource>();
-
-        for (int i = 0; i < detectedColliders.Length; i++)
+        for (int index = 0; index < detectedColliders.Length; index++)
         {
-            Collider collider = detectedColliders[i];
+            Collider collider = detectedColliders[index];
 
             if (collider.CompareTag(_resourceTag) == false)
             {
                 continue;
             }
 
-            if (collider.TryGetComponent(out Resource resourceComponent) == true)
+            Resource resourceComponent;
+
+            if (collider.TryGetComponent<Resource>(out resourceComponent) == false)
             {
-                if (resourceComponent.gameObject.activeSelf == true)
-                {
-                    _detectedResources.Add(resourceComponent);
-                }
+                continue;
             }
+
+            if (resourceComponent.gameObject.activeInHierarchy == false)
+            {
+                continue;
+            }
+
+            _detectedResources.Add(resourceComponent);
         }
     }
 

@@ -8,8 +8,13 @@ public class BaseExpansion : MonoBehaviour
     [SerializeField] private BaseFactory _baseFactory;
     [SerializeField] private FlagPlacer _flagPlacer;
 
-    private Coroutine _transferRoutine;
+    private Coroutine _expansionRoutine;
+
     private bool _isExpansionInProgress;
+    private bool _isWaitingForBaseCreate;
+
+    private Bot _expandingBot;
+    private Base _createdBase;
 
     private void Awake()
     {
@@ -32,10 +37,19 @@ public class BaseExpansion : MonoBehaviour
         _botFactory.BotCreate -= OnBotCreated;
         _baseFactory.BaseCreate -= OnBaseCreated;
 
-        if (_transferRoutine != null)
+        UnsubscribeExpandingBot();
+
+        if (_expansionRoutine != null)
         {
-            StopCoroutine(_transferRoutine);
+            StopCoroutine(_expansionRoutine);
+            _expansionRoutine = null;
         }
+
+        _isExpansionInProgress = false;
+        _isWaitingForBaseCreate = false;
+
+        _expandingBot = null;
+        _createdBase = null;
     }
 
     private void OnBotCreated(Bot bot)
@@ -52,39 +66,18 @@ public class BaseExpansion : MonoBehaviour
 
         _isExpansionInProgress = true;
 
+        if (_expansionRoutine != null)
+        {
+            StopCoroutine(_expansionRoutine);
+        }
+
         _flagPlacer.Set(position);
         _baseFactory.SetSpawnPosition(position);
-        
-        _botFactory.enabled = false;
-        _baseFactory.enabled = true;
 
-        _baseFactory.Produce();
+        _expansionRoutine = StartCoroutine(ExpansionRoutine());
     }
 
-    private void OnBaseCreated(Base createdBase)
-    {
-        if (_isExpansionInProgress == false)
-        {
-            return;
-        }
-
-        _flagPlacer.Unset();
-        _baseFactory.ClearSpawnPosition();
-
-        _baseFactory.enabled = false;
-        _botFactory.enabled = true;
-
-        if (_transferRoutine != null)
-        {
-            StopCoroutine(_transferRoutine);
-        }
-
-        _transferRoutine = StartCoroutine(TransferBot(createdBase));
-
-        _isExpansionInProgress = false;
-    }
-
-    private IEnumerator TransferBot(Base receivingBase)
+    private IEnumerator ExpansionRoutine()
     {
         Bot availableBot;
 
@@ -93,9 +86,98 @@ public class BaseExpansion : MonoBehaviour
             yield return null;
         }
 
-        if (receivingBase != null && availableBot != null)
+        _expandingBot = availableBot;
+        _createdBase = null;
+
+        _expandingBot.RelocationReached += OnExpandingBotReachedFlag;
+
+        bool relocationStarted = _expandingBot.TryRelocateTo(_flagPlacer.FlagTransform);
+
+        if (relocationStarted == false)
         {
-            receivingBase.AddBot(availableBot);
+            UnsubscribeExpandingBot();
+            _base.AddBot(_expandingBot);
+
+            FinishExpansion();
+            yield break;
+        }
+
+        while (_expandingBot != null && _expandingBot.IsBusy == true)
+        {
+            yield return null;
+        }
+
+        if (_expandingBot == null)
+        {
+            FinishExpansion();
+            yield break;
+        }
+
+        UnsubscribeExpandingBot();
+
+        _botFactory.enabled = false;
+        _baseFactory.enabled = true;
+
+        _isWaitingForBaseCreate = true;
+        _baseFactory.Produce();
+
+        while (_createdBase == null)
+        {
+            yield return null;
+        }
+
+        _isWaitingForBaseCreate = false;
+
+        _flagPlacer.Unset();
+        _baseFactory.ClearSpawnPosition();
+
+        _baseFactory.enabled = false;
+        _botFactory.enabled = true;
+
+        _createdBase.AddBot(_expandingBot);
+
+        FinishExpansion();
+    }
+
+    private void OnExpandingBotReachedFlag(Bot bot)
+    {
+        if (_expandingBot != bot)
+        {
+            return;
+        }
+
+        bot.Reset();
+    }
+
+    private void OnBaseCreated(Base createdBase)
+    {
+        if (_isWaitingForBaseCreate == false)
+        {
+            return;
+        }
+
+        _createdBase = createdBase;
+    }
+
+    private void FinishExpansion()
+    {
+        _isExpansionInProgress = false;
+
+        if (_expansionRoutine != null)
+        {
+            StopCoroutine(_expansionRoutine);
+        }
+
+        _expansionRoutine = null;
+        _expandingBot = null;
+        _createdBase = null;
+    }
+
+    private void UnsubscribeExpandingBot()
+    {
+        if (_expandingBot != null)
+        {
+            _expandingBot.RelocationReached -= OnExpandingBotReachedFlag;
         }
     }
 }

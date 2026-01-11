@@ -45,14 +45,13 @@ public class SpawnerResource : Spawner<Resource>
             return;
         }
 
-        Resource resource = Pool.Get();
-
         Bounds bounds = _arenaRenderer.bounds;
 
         float x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
         float y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);
         float z = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
 
+        Resource resource = Pool.Get();
         resource.transform.position = new Vector3(x, y, z);
 
         resource.ReleaseRequested += ReturnObject;

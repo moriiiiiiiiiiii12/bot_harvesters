@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class FlagPlacer : MonoBehaviour
 {
-    [SerializeField] private Flag _flag;
+    [SerializeField] private Transform _flag;
+
+    public Transform FlagTransform => _flag;
 
     public void Set(Vector3 position)
     {
-        _flag.transform.position = position;
+        _flag.position = position;
         _flag.gameObject.SetActive(true);
     }
 

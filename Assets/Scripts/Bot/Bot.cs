@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Bot : MonoBehaviour
@@ -11,8 +12,13 @@ public class Bot : MonoBehaviour
 
     private bool _isMovingToDropPoint;
 
+    private bool _isRelocating;
+    private Transform _relocationTarget;
+
     public int ReservationId { get; private set; }
     public bool IsBusy { get; private set; }
+
+    public event Action<Bot> RelocationReached;
 
     private void Awake()
     {
@@ -36,6 +42,27 @@ public class Bot : MonoBehaviour
         _dropPoint = dropPoint;
     }
 
+    public bool TryRelocateTo(Transform target)
+    {
+        if (IsBusy == true)
+        {
+            return false;
+        }
+
+        _reservedResource = null;
+        _carriedResource = null;
+
+        _isMovingToDropPoint = false;
+
+        _isRelocating = true;
+        _relocationTarget = target;
+
+        IsBusy = true;
+        _movement.MoveTo(_relocationTarget);
+
+        return true;
+    }
+
     public bool TrySetTarget(Resource resource)
     {
         if (IsBusy == true)
@@ -45,6 +72,10 @@ public class Bot : MonoBehaviour
 
         _reservedResource = resource;
         _carriedResource = null;
+
+        _isRelocating = false;
+        _relocationTarget = null;
+
         _isMovingToDropPoint = false;
 
         IsBusy = true;
@@ -55,6 +86,21 @@ public class Bot : MonoBehaviour
 
     private void OnReachTarget()
     {
+        if (_isRelocating == true)
+        {
+            _isRelocating = false;
+            _relocationTarget = null;
+
+            IsBusy = false;
+
+            if (RelocationReached != null)
+            {
+                RelocationReached.Invoke(this);
+            }
+
+            return;
+        }
+
         if (_isMovingToDropPoint == false)
         {
             bool pickedUp = _resourceCapture.TryPickUp(_reservedResource);
@@ -70,7 +116,6 @@ public class Bot : MonoBehaviour
         if (_carriedResource == null)
         {
             Reset();
-
             return;
         }
 
@@ -98,6 +143,9 @@ public class Bot : MonoBehaviour
 
         _reservedResource = null;
         _carriedResource = null;
+
+        _isRelocating = false;
+        _relocationTarget = null;
 
         _isMovingToDropPoint = false;
 

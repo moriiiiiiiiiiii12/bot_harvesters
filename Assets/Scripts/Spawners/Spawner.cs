@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public abstract class Spawner : MonoBehaviour
-{
-}
+public abstract class Spawner : MonoBehaviour { }
 
 public abstract class Spawner<T> : Spawner where T : MonoBehaviour
 {
