@@ -448,7 +448,7 @@ MonoBehaviour:
   _scanInterval: 1
   _resourceLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 128
   _resourceStorageRef: {fileID: 11400000, guid: f1a070ff24967df4cb66844e01e28a19, type: 2}
 --- !u!1 &7472021289920683486
 GameObject:
@@ -568,7 +568,7 @@ GameObject:
   - component: {fileID: 7801811424303382309}
   - component: {fileID: 906447094859834668}
   - component: {fileID: 5782800381540248479}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}

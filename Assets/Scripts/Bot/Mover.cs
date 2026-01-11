@@ -26,7 +26,7 @@ public class Mover : MonoBehaviour
         {
             Move();
 
-            if (Reached() == true)
+            if (IsReached() == true)
             {
                 _target = null;
                 _coroutine = null;
@@ -54,7 +54,7 @@ public class Mover : MonoBehaviour
         }
     }
 
-    private bool Reached()
+    private bool IsReached()
     {
         return (_target.position - transform.position).sqrMagnitude <= _arriveDistance * _arriveDistance;
     }
