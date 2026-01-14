@@ -8,16 +8,18 @@ public class ScannerResources : MonoBehaviour
     [SerializeField] private float _scanRadius = 10f;
     [SerializeField] private float _scanInterval = 1f;
     [SerializeField] private LayerMask _resourceLayerMask;
-    [SerializeField] private ResourceStorageRef _resourceStorageRef;
+    [SerializeField] private ResourceStorage _resourceStorage;
 
     private readonly List<Resource> _detectedResources = new List<Resource>();
-    private ResourceStorage _resourceStorage;
     private Coroutine _scanCoroutine;
+
+    public void Init(ResourceStorage resourceStorage)
+    {
+        _resourceStorage = resourceStorage;
+    }
 
     private void OnEnable()
     {
-        _resourceStorage = _resourceStorageRef.Value;
-
         UpdateResourceLists();
 
         _scanCoroutine = StartCoroutine(ScanCoroutine());

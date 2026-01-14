@@ -10,8 +10,7 @@ public class Base : MonoBehaviour
     [SerializeField] private ScannerResources _scannerResources;
     [SerializeField] private float _assignInterval = 0.1f;
     [SerializeField] private List<Bot> _bots = new List<Bot>();
-    [SerializeField] private ResourceStorageRef _resourceStorageRef;
-    private ResourceStorage _resourceStorage;
+    [SerializeField] private ResourceStorage _resourceStorage;
 
     private Coroutine _assignRoutine;
 
@@ -19,9 +18,12 @@ public class Base : MonoBehaviour
 
     public int CurrentCountBots => _bots.Count;
 
-    public void Init()
+    public void Init(ResourceStorage resourceStorage)
     {
         _bots.Clear();
+
+        _resourceStorage = resourceStorage;
+        _scannerResources.Init(_resourceStorage);
     }
 
     private void Start()
@@ -37,8 +39,6 @@ public class Base : MonoBehaviour
         _assignRoutine = StartCoroutine(AssignRoutine());
 
         _dropPoint.ResourceDelivered += OnResourceDelivered;
-
-        _resourceStorage = _resourceStorageRef.Value;
     }
 
     private void OnDisable()

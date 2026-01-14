@@ -1,18 +1,10 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 
-public class SpawnerBase : Spawner<Base>
+public class SpawnerBase : Spawner<BaseInstaller>
 {
-    [SerializeField] private BaseRef _basePrefab;
-
-    protected override void Awake()
-    {
-        Prefab = _basePrefab.Value;
-
-        base.Awake();
-    }
+    [SerializeField] private ResourceStorage _resourceStorage;
+    [SerializeField] private SpawnerBot _spawnerBot;
 
     public Base TrySpawnOne(Vector3 spawnPoint)
     {
@@ -21,11 +13,11 @@ public class SpawnerBase : Spawner<Base>
             return null;
         }
 
-        Base @base = Pool.Get();
+        BaseInstaller @base = Pool.Get();
 
-        @base.Init();
+        @base.Init(_resourceStorage, this, _spawnerBot);
         @base.transform.position = spawnPoint;
 
-        return @base;
+        return @base.gameObject.GetComponent<Base>();
     }
 }

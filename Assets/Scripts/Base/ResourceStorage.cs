@@ -4,14 +4,8 @@ using UnityEngine;
 public class ResourceStorage : MonoBehaviour
 {
     [SerializeField] private SpawnerResource _spawnerResource;
-    [SerializeField] private ResourceStorageRef _resourceStorageRef;
 
     private readonly Dictionary<Resource, bool> _isReservedByResource = new Dictionary<Resource, bool>();
-
-    private void Awake()
-    {
-        _resourceStorageRef.Set(this);
-    }
 
     private void OnEnable()
     {

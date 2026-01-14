@@ -3,17 +3,14 @@ using UnityEngine;
 
 public class BotFactory : Factory
 {
-    [SerializeField] private SpawnerRef _spawnerBotRef;
+    [SerializeField] private SpawnerBot _spawnerBot;
     [SerializeField] private BotProductionPermission _productionPermission;
-    private SpawnerBot _spawnerBot;
 
     public event Action<Bot> BotCreate;
 
-    protected override void OnEnable()
+    public void Init(SpawnerBot spawnerBot)
     {
-        base.OnEnable();
-
-        _spawnerBot = (SpawnerBot)_spawnerBotRef.Value; 
+        _spawnerBot = spawnerBot;
     }
 
     public override void Produce()

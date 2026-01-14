@@ -8,8 +8,6 @@ public class Resource : MonoBehaviour
 
     private bool _isPickedUp;
 
-    public int Id { get; private set; }
-
     public event Action<Resource> ReleaseRequested;
 
     private void OnEnable()
@@ -27,8 +25,6 @@ public class Resource : MonoBehaviour
         }
 
         transform.SetParent(null);
-
-        Id = IdGenerator.GenerateId();
     }
 
     public bool TryPickUp()

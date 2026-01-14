@@ -9,7 +9,6 @@ public abstract class Spawner<T> : Spawner where T : MonoBehaviour
 {
     [Header("Необходимые компоненты: ")]
     [SerializeField] protected T Prefab;
-    [SerializeField] private SpawnerRef _spawnerRef;
 
     [Header("Настройки пула: ")]
     [SerializeField] protected int PoolSize = 5;
@@ -26,9 +25,6 @@ public abstract class Spawner<T> : Spawner where T : MonoBehaviour
         CountActiveObjects = 0;
 
         InitializePool();
-
-        if (_spawnerRef != null) 
-            _spawnerRef.Set(this);
     }
 
     private void InitializePool()

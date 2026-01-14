@@ -383,7 +383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 3
-  _spawnerBotRef: {fileID: 11400000, guid: 54b0d25d143b0804b8bad49b63ce3eab, type: 2}
+  _spawnerBot: {fileID: 0}
   _productionPermission: {fileID: 9159184040662331328}
 --- !u!114 &9159184040662331328
 MonoBehaviour:
@@ -449,7 +449,7 @@ MonoBehaviour:
   _resourceLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  _resourceStorageRef: {fileID: 11400000, guid: f1a070ff24967df4cb66844e01e28a19, type: 2}
+  _resourceStorage: {fileID: 0}
 --- !u!1 &7472021289920683486
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,6 +568,7 @@ GameObject:
   - component: {fileID: 7801811424303382309}
   - component: {fileID: 906447094859834668}
   - component: {fileID: 5782800381540248479}
+  - component: {fileID: 2458558173968693303}
   m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
@@ -683,7 +684,7 @@ MonoBehaviour:
   _scannerResources: {fileID: 5850993919704438562}
   _assignInterval: 0.1
   _bots: []
-  _resourceStorageRef: {fileID: 11400000, guid: f1a070ff24967df4cb66844e01e28a19, type: 2}
+  _resourceStorage: {fileID: 0}
 --- !u!114 &7801811424303382309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -726,6 +727,22 @@ MonoBehaviour:
   _botFactory: {fileID: 4128922747324697316}
   _baseFactory: {fileID: 6255676000114021027}
   _flagPlacer: {fileID: 906447094859834668}
+--- !u!114 &2458558173968693303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8533817253377829729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111a17d4c0e468842bd666415477d0e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _base: {fileID: 2653958452310384422}
+  _scannerResources: {fileID: 5850993919704438562}
+  _baseFactory: {fileID: 6255676000114021027}
+  _botfactory: {fileID: 4128922747324697316}
 --- !u!1 &8553271344176687619
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,7 +907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 5
-  _spawnerBaseRef: {fileID: 11400000, guid: 47f2f5d5a723f454dbea23b683b9a029, type: 2}
+  _spawnerBase: {fileID: 0}
 --- !u!1001 &1242436595946398606
 PrefabInstance:
   m_ObjectHideFlags: 0

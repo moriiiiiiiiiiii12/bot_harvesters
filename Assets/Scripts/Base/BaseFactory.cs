@@ -1,21 +1,19 @@
 using System;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class BaseFactory : Factory
 {
-    [SerializeField] private SpawnerRef _spawnerBaseRef;
-    private SpawnerBase _spawnerBase;
+    [SerializeField] private SpawnerBase _spawnerBase;
 
     public event Action<Base> BaseCreate;
 
     private Vector3 _spawnPosition;
     private bool _hasSpawnPosition;
 
-    protected override void OnEnable()
+    public void Init(SpawnerBase spawnerBase)
     {
-        base.OnEnable(); 
-
-        _spawnerBase = (SpawnerBase)_spawnerBaseRef.Value;
+        _spawnerBase = spawnerBase;
     }
 
     public void SetSpawnPosition(Vector3 position)
