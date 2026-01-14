@@ -274,14 +274,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 1179927663971752523, guid: 222ecd88514d1f34e80c4132c06ced40, type: 3}
-  _spawnerRef: {fileID: 0}
   PoolSize: 100
   _arenaRenderer: {fileID: 519785888}
   _spawnIntervalSeconds: 0.5
-  _spawnOverlapRadius: 0.5
+  _spawnOverlapRadius: 2
   _spawnOverlapLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!65 &519785887
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -507,7 +506,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7371005527196408059, guid: df7c338dbb63b4b4e851d018ead9c793, type: 3}
-  _spawnerRef: {fileID: 11400000, guid: 54b0d25d143b0804b8bad49b63ce3eab, type: 2}
   PoolSize: 200
 --- !u!1 &963194225
 GameObject:
@@ -657,7 +655,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 2458558173968693303, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
-  _spawnerRef: {fileID: 11400000, guid: 47f2f5d5a723f454dbea23b683b9a029, type: 2}
   PoolSize: 100
   _resourceStorage: {fileID: 1991417979}
   _spawnerBot: {fileID: 914078621}
@@ -686,6 +683,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2653958452310384422, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
+      propertyPath: _resourceStorage
+      value: 
+      objectReference: {fileID: 1991417979}
+    - target: {fileID: 2653958452310384422, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: _bots.Array.data[0]
       value: 
       objectReference: {fileID: 1099477007}
@@ -700,7 +701,7 @@ PrefabInstance:
     - target: {fileID: 4128922747324697316, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: _spawnerBot
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 914078621}
     - target: {fileID: 5618827181811985098, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -709,6 +710,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 5850993919704438562, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
+      propertyPath: _resourceStorage
+      value: 
+      objectReference: {fileID: 1991417979}
     - target: {fileID: 6200759023987543373, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -716,7 +721,7 @@ PrefabInstance:
     - target: {fileID: 6255676000114021027, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: _spawnerBase
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1215128653}
     - target: {fileID: 6792513593488114631, guid: cca2f4cc98a216d4593dfa44e5e78524, type: 3}
       propertyPath: m_Name
       value: ScannerResource
