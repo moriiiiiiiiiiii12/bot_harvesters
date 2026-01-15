@@ -1,53 +1,31 @@
 using System;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
-public class BaseFactory : Factory
+public class BaseFactory : Factory<Base>
 {
     [SerializeField] private SpawnerBase _spawnerBase;
 
-    public event Action<Base> BaseCreate;
-
-    private Vector3 _spawnPosition;
-    private bool _hasSpawnPosition;
+    public event Action<Base> BaseCreated;
 
     public void Init(SpawnerBase spawnerBase)
     {
         _spawnerBase = spawnerBase;
     }
 
-    public void SetSpawnPosition(Vector3 position)
+    protected override Base CreateInternal(Vector3 position)
     {
-        _spawnPosition = position;
-        _hasSpawnPosition = true;
-    }
+        Base createdBase = _spawnerBase.TrySpawnOne(position);
 
-    public void ClearSpawnPosition()
-    {
-        _hasSpawnPosition = false;
-    }
-
-    public override void Produce()
-    {
-        if (_hasSpawnPosition == false)
+        if (createdBase == null)
         {
-            return;
+            return null;
         }
 
-        if (_counterResource.Count >= _countResourceProduce)
+        if (BaseCreated != null)
         {
-            Base createdBase = _spawnerBase.TrySpawnOne(_spawnPosition);
-
-            if (createdBase != null)
-            {
-                _hasSpawnPosition = false;
-                _counterResource.Decrease(_countResourceProduce);
-
-                if (BaseCreate != null)
-                {
-                    BaseCreate.Invoke(createdBase);
-                }
-            }
+            BaseCreated.Invoke(createdBase);
         }
+
+        return createdBase;
     }
 }

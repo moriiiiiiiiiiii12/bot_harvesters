@@ -1,19 +1,26 @@
+using System;
 using UnityEngine;
 
-public abstract class Factory : MonoBehaviour
+public abstract class Factory<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] protected CounterResource _counterResource;
-    [SerializeField] protected int _countResourceProduce = 3;
+    public event Action<T> Created;
 
-    protected virtual void OnEnable()
+    public bool TryCreate(Vector3 position, out T created)
     {
-        _counterResource.CountIncreased += Produce;
+        created = CreateInternal(position);
+
+        if (created == null)
+        {
+            return false;
+        }
+
+        if (Created != null)
+        {
+            Created.Invoke(created);
+        }
+
+        return true;
     }
 
-    protected virtual void OnDisable()
-    {
-        _counterResource.CountIncreased -= Produce;
-    }
-
-    public abstract void Produce();
+    protected abstract T CreateInternal(Vector3 position);
 }

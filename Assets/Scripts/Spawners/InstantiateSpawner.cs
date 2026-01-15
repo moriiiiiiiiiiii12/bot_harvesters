@@ -6,6 +6,7 @@ public abstract class InstantiateSpawner<T> : Spawner<T> where T : MonoBehaviour
     {
         T instance = Instantiate(Prefab, position, rotation);
         RaiseSpawned(instance);
+        
         return instance;
     }
 }

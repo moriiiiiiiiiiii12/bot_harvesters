@@ -347,6 +347,7 @@ GameObject:
   - component: {fileID: 5921440128582259602}
   - component: {fileID: 4128922747324697316}
   - component: {fileID: 9159184040662331328}
+  - component: {fileID: 516419013060932236}
   m_Layer: 0
   m_Name: BotFactory
   m_TagString: Untagged
@@ -381,10 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed184743cd0f474686d06f647c60029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _counterResource: {fileID: 2765307153473877177}
-  _countResourceProduce: 3
   _spawnerBot: {fileID: 0}
-  _productionPermission: {fileID: 9159184040662331328}
 --- !u!114 &9159184040662331328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,6 +397,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _base: {fileID: 2653958452310384422}
   _maxCountBot: 5
+--- !u!114 &516419013060932236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5618827181811985098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4500344ba9d504a499abba95a03625f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _counterResource: {fileID: 2765307153473877177}
+  _countResourceProduce: 3
+  _botFactory: {fileID: 4128922747324697316}
+  _productionPermission: {fileID: 9159184040662331328}
 --- !u!1 &6792513593488114631
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +740,8 @@ MonoBehaviour:
   _base: {fileID: 2653958452310384422}
   _botFactory: {fileID: 4128922747324697316}
   _baseFactory: {fileID: 6255676000114021027}
+  _botProduction: {fileID: 516419013060932236}
+  _baseProduction: {fileID: 2963276497166486472}
   _flagPlacer: {fileID: 906447094859834668}
 --- !u!114 &2458558173968693303
 MonoBehaviour:
@@ -871,6 +887,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7968983225781859737}
   - component: {fileID: 6255676000114021027}
+  - component: {fileID: 2963276497166486472}
   m_Layer: 0
   m_Name: BaseFactory
   m_TagString: Untagged
@@ -905,9 +922,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4189253cd1012bc4ca1c2909e48b21e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnerBase: {fileID: 0}
+--- !u!114 &2963276497166486472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9034857981645145433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6dbe6045ac42b488991339fabc5042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _counterResource: {fileID: 2765307153473877177}
   _countResourceProduce: 5
-  _spawnerBase: {fileID: 0}
+  _baseFactory: {fileID: 6255676000114021027}
 --- !u!1001 &1242436595946398606
 PrefabInstance:
   m_ObjectHideFlags: 0

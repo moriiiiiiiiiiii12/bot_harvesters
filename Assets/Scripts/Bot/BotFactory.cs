@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
 
-public class BotFactory : Factory
+public class BotFactory : Factory<Bot>
 {
     [SerializeField] private SpawnerBot _spawnerBot;
-    [SerializeField] private BotProductionPermission _productionPermission;
 
     public event Action<Bot> BotCreate;
 
@@ -13,26 +12,21 @@ public class BotFactory : Factory
         _spawnerBot = spawnerBot;
     }
 
-    public override void Produce()
+
+    protected override Bot CreateInternal(Vector3 position)
     {
-        if (_productionPermission.CanProduce() == false)
+        Bot createdBot = _spawnerBot.TrySpawnOne(position);
+
+        if (createdBot == null)
         {
-            return;
+            return null;
         }
 
-        if (_counterResource.Count >= _countResourceProduce)
+        if (BotCreate != null)
         {
-            Bot createdBot = _spawnerBot.TrySpawnOne(transform.position);
-
-            if (createdBot != null)
-            {
-                _counterResource.Decrease(_countResourceProduce);
-
-                if (BotCreate != null)
-                {
-                    BotCreate.Invoke(createdBot);
-                }
-            }
+            BotCreate.Invoke(createdBot);
         }
+
+        return createdBot;
     }
 }

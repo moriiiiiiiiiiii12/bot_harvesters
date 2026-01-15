@@ -6,6 +6,7 @@ public sealed class SpawnerBot : InstantiateSpawner<Bot>
     {
         Bot bot = Spawn(position, Quaternion.identity);
         bot.transform.position = position;
+        
         return bot;
     }
 }

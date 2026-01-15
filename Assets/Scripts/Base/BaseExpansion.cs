@@ -6,6 +6,8 @@ public class BaseExpansion : MonoBehaviour
     [SerializeField] private Base _base;
     [SerializeField] private BotFactory _botFactory;
     [SerializeField] private BaseFactory _baseFactory;
+    [SerializeField] private BotProduction _botProduction;
+    [SerializeField] private BaseProduction _baseProduction;
     [SerializeField] private FlagPlacer _flagPlacer;
 
     private Coroutine _expansionRoutine;
@@ -20,22 +22,22 @@ public class BaseExpansion : MonoBehaviour
     {
         _flagPlacer.Unset();
 
-        _baseFactory.enabled = false;
-        _botFactory.enabled = true;
+        _baseProduction.enabled = false;
+        _botProduction.enabled = true;
     }
 
     private void OnEnable()
     {
         _base.ExpansionRequested += OnExpansionRequested;
         _botFactory.BotCreate += OnBotCreated;
-        _baseFactory.BaseCreate += OnBaseCreated;
+        _baseFactory.BaseCreated += OnBaseCreated;
     }
 
     private void OnDisable()
     {
         _base.ExpansionRequested -= OnExpansionRequested;
         _botFactory.BotCreate -= OnBotCreated;
-        _baseFactory.BaseCreate -= OnBaseCreated;
+        _baseFactory.BaseCreated -= OnBaseCreated;
 
         UnsubscribeExpandingBot();
 
@@ -72,12 +74,11 @@ public class BaseExpansion : MonoBehaviour
         }
 
         _flagPlacer.Set(position);
-        _baseFactory.SetSpawnPosition(position);
 
-        _expansionRoutine = StartCoroutine(ExpansionRoutine());
+        _expansionRoutine = StartCoroutine(ExpansionRoutine(position));
     }
 
-    private IEnumerator ExpansionRoutine()
+    private IEnumerator ExpansionRoutine(Vector3 basePosition)
     {
         Bot availableBot;
 
@@ -110,16 +111,17 @@ public class BaseExpansion : MonoBehaviour
         if (_expandingBot == null)
         {
             FinishExpansion();
+            
             yield break;
         }
 
         UnsubscribeExpandingBot();
 
-        _botFactory.enabled = false;
-        _baseFactory.enabled = true;
+        _botProduction.enabled = false;
+        _baseProduction.enabled = true;
 
         _isWaitingForBaseCreate = true;
-        _baseFactory.Produce();
+        _baseProduction.Request(basePosition);
 
         while (_createdBase == null)
         {
@@ -129,10 +131,9 @@ public class BaseExpansion : MonoBehaviour
         _isWaitingForBaseCreate = false;
 
         _flagPlacer.Unset();
-        _baseFactory.ClearSpawnPosition();
 
-        _baseFactory.enabled = false;
-        _botFactory.enabled = true;
+        _baseProduction.enabled = false;
+        _botProduction.enabled = true;
 
         _createdBase.AddBot(_expandingBot);
 
