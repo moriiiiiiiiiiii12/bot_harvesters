@@ -28,6 +28,7 @@ public class Selection : MonoBehaviour
         if (hit.collider.TryGetComponent(out Selectable target))
         {
             SelectTarget(target);
+            
             return;
         }
 

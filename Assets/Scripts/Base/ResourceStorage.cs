@@ -9,12 +9,12 @@ public class ResourceStorage : MonoBehaviour
 
     private void OnEnable()
     {
-        _spawnerResource.CreateObject += AddResource;
+        _spawnerResource.SpawnResource += AddResource;
     }
 
     private void OnDisable()
     {
-        _spawnerResource.CreateObject -= AddResource;
+        _spawnerResource.SpawnResource -= AddResource;
     }
 
     private void AddResource(Resource resource)

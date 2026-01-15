@@ -1,23 +1,17 @@
 using UnityEngine;
 
-
-public class SpawnerBase : Spawner<BaseInstaller>
+public sealed class SpawnerBase : InstantiateSpawner<BaseInstaller>
 {
+    [Header("Зависимости для префаба")]
     [SerializeField] private ResourceStorage _resourceStorage;
     [SerializeField] private SpawnerBot _spawnerBot;
 
     public Base TrySpawnOne(Vector3 spawnPoint)
     {
-        if (CountActiveObjects >= PoolSize)
-        {
-            return null;
-        }
+        BaseInstaller baseInstaller = Spawn(spawnPoint, Quaternion.identity);
+        baseInstaller.Init(_resourceStorage, this, _spawnerBot);
+        baseInstaller.transform.position = spawnPoint;
 
-        BaseInstaller @base = Pool.Get();
-
-        @base.Init(_resourceStorage, this, _spawnerBot);
-        @base.transform.position = spawnPoint;
-
-        return @base.gameObject.GetComponent<Base>();
+        return baseInstaller.Base;
     }
 }

@@ -7,6 +7,8 @@ public class BaseInstaller : MonoBehaviour
     [SerializeField] private BaseFactory _baseFactory;
     [SerializeField] private BotFactory _botfactory;
 
+    public Base Base => _base;
+
     public void Init(ResourceStorage resourceStorage, SpawnerBase spawnerBase, SpawnerBot spawnerBot)
     {
         _base.Init(resourceStorage);

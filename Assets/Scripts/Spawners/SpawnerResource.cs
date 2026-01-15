@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-
-public class SpawnerResource : Spawner<Resource>
+public sealed class SpawnerResource : PooledSpawner<Resource>
 {
     [SerializeField] private Renderer _arenaRenderer;
     [SerializeField] private float _spawnIntervalSeconds = 3.0f;
@@ -13,6 +12,8 @@ public class SpawnerResource : Spawner<Resource>
     public event Action<Resource> SpawnResource;
 
     private Coroutine _spawnCoroutine;
+    private int _countActiveObjects;
+    private int _poolSize = 5;
 
     private void OnEnable()
     {
@@ -32,17 +33,19 @@ public class SpawnerResource : Spawner<Resource>
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(_spawnIntervalSeconds);
 
-        while (enabled == true)
+        while (enabled)
         {
             TrySpawnOne();
-            
+
             yield return waitForSeconds;
         }
     }
 
     private void TrySpawnOne()
     {
-        if (CountActiveObjects >= PoolSize)
+        _poolSize = Pool.MaxSize;
+
+        if (_countActiveObjects >= _poolSize)
         {
             return;
         }
@@ -60,10 +63,13 @@ public class SpawnerResource : Spawner<Resource>
             return;
         }
 
-        Resource resource = Pool.Get();
-        resource.transform.position = spawnPosition;
+        Resource resource = Spawn(spawnPosition, Quaternion.identity);
 
+        resource.ReleaseRequested -= ReturnObject;
         resource.ReleaseRequested += ReturnObject;
+
+        _countActiveObjects++;
+
         SpawnResource?.Invoke(resource);
     }
 
@@ -74,15 +80,17 @@ public class SpawnerResource : Spawner<Resource>
         return hasOverlap == false;
     }
 
-    protected void ReturnObject(Resource resource)
+    private void ReturnObject(Resource resource)
     {
-        if (resource == null)
+        if (Pool.Contains(resource) == false)
+        {
             return;
-
-        if (ActiveObjects.Contains(resource) == false)
-            return;
+        }
 
         resource.ReleaseRequested -= ReturnObject;
-        Pool.Release(resource);
+
+        _countActiveObjects--;
+
+        Release(resource);
     }
 }

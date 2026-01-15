@@ -1,19 +1,11 @@
 using UnityEngine;
 
-
-public class SpawnerBot : Spawner<Bot>
+public sealed class SpawnerBot : InstantiateSpawner<Bot>
 {
     public Bot TrySpawnOne(Vector3 position)
     {
-        if (CountActiveObjects >= PoolSize)
-        {
-            return null;
-        }
-
-        Bot bot = Pool.Get();
-
+        Bot bot = Spawn(position, Quaternion.identity);
         bot.transform.position = position;
-
         return bot;
     }
 }
