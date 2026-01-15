@@ -322,8 +322,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -928,6 +927,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1958676752}
   - component: {fileID: 1958676753}
+  - component: {fileID: 1958676755}
   - component: {fileID: 1958676754}
   m_Layer: 0
   m_Name: Player
@@ -965,6 +965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 0.1
+  _cameraInput: {fileID: 1958676755}
 --- !u!114 &1958676754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -978,6 +979,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainCamera: {fileID: 963194227}
+--- !u!114 &1958676755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958676750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a9c7e4d834d7e4b93872760216fe20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1991417977
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,9 +35,9 @@ public sealed class SpawnerResource : PooledSpawner<Resource>
 
         while (enabled)
         {
-            TrySpawnOne();
-
             yield return waitForSeconds;
+
+            TrySpawnOne();
         }
     }
 
